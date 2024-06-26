@@ -27,7 +27,7 @@ handlers:
     level: DEBUG
     formatter: detailed
     filename: tmp/gandlf/gandlf.log
-    maxBytes: 2000
+    maxBytes: 51200
     backupCount: 2
 loggers: # you can add your customized logger
   debug_logger:
