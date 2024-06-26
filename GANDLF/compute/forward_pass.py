@@ -22,7 +22,7 @@ from GANDLF.utils import (
 )
 from GANDLF.metrics import overall_stats
 from tqdm import tqdm
-from gandlf_logger import gandlf_logger_setup
+from GANDLF.gandlf_logger import gandlf_logger_setup
 
 
 def validate_network(
