@@ -22,6 +22,7 @@ from GANDLF.utils import (
 )
 from GANDLF.metrics import overall_stats
 from tqdm import tqdm
+from gandlf_logger import gandlf_logger_setup
 
 
 def validate_network(
@@ -46,6 +47,7 @@ def validate_network(
     Returns:
         Tuple[float, dict]: The average validation loss and the average validation metrics.
     """
+    logger = gandlf_logger_setup(__name__)
     print("*" * 20)
     print("Starting " + mode + " : ")
     print("*" * 20)
@@ -72,7 +74,7 @@ def validate_network(
     # automatic mixed precision - https://pytorch.org/docs/stable/amp.html
     if params["verbose"]:
         if params["model"]["amp"]:
-            print("Using Automatic mixed precision", flush=True)
+            logger.info("Using Automatic mixed precision")
 
     if scheduler is None:
         current_output_dir = params["output_dir"]  # this is in inference mode
