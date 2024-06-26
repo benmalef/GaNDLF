@@ -101,3 +101,4 @@ jobs:
           cd openfl
           python -m tests.github.test_gandlf --template gandlf_seg_test --fed_workspace aggregator --col1 one --col2 two --rounds-to-train 1 --gandlf_config $config_to_use
           GANDLF/config_gandlf_logger.yaml > /home/runner/work/GaNDLF/GaNDLF/openfl/aggregator/two/aggregator/GANDLF/config_gandlf_logger.yaml
+          GANDLF/config_gandlf_logger.yaml > /home/runner/work/GaNDLF/GaNDLF/openfl/aggregator/one/aggregator/GANDLF/config_gandlf_logger.yaml
