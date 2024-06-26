@@ -18,6 +18,10 @@ def gandlf_logger_setup(logger_name, config_path=None) -> logging.Logger:
         config_dir = Path.cwd()
         config_path = Path.joinpath(config_dir, "GANDLF/config_gandlf_logger.yaml")
 
+    # create dir for storing the messages
+    directory = Path.joinpath(config_dir, "tmp/gandlf")
+    directory.mkdir(parents=True, exist_ok=True)
+
     with open(config_path, "r") as file:
         config_dict = yaml.safe_load(file)
         logging.config.dictConfig(config_dict)
