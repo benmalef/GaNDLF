@@ -97,7 +97,7 @@ jobs:
           tail -n +9 testing/data/train_2d_rad_segmentation.csv >> /home/runner/work/GaNDLF/GaNDLF/openfl/valid.csv
           head -n 8 testing/data/train_2d_rad_segmentation.csv > /home/runner/work/GaNDLF/GaNDLF/openfl/train.csv
           sed -i 's/# n_channels: 3/num_channels: 3/g' testing/config_segmentation.yaml
-          GANDLF/config_gandlf_logger.yaml > /home/runner/work/GaNDLF/GaNDLF/openfl/aggregator/two/aggregator/GANDLF/config_gandlf_logger.yaml
+          GANDLF/config_gandlf_logger.yaml > /home/runner/work/GaNDLF/GaNDLF/openfl/config_gandlf_logger.yaml
           config_to_use=$(pwd)/testing/config_segmentation.yaml
           cd openfl
           python -m tests.github.test_gandlf --template gandlf_seg_test --fed_workspace aggregator --col1 one --col2 two --rounds-to-train 1 --gandlf_config $config_to_use
