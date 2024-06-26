@@ -19,8 +19,8 @@ def gandlf_logger_setup(logger_name, config_path=None) -> logging.Logger:
         config_path = Path.joinpath(config_dir, "GANDLF/config_gandlf_logger.yaml")
 
     with open(config_path, "r") as file:
-        config1 = yaml.safe_load(file)
-        logging.config.dictConfig(config1)
+        config_dict = yaml.safe_load(file)
+        logging.config.dictConfig(config_dict)
 
     logging.captureWarnings(True)
 
