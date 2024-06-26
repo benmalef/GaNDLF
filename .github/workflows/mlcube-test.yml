@@ -4,9 +4,8 @@ name: MLCube-Test
 
 on:
   push:
-    branches: [ master ]
+    branches: [master]
   pull_request: {}
-    
 
 jobs:
   test-deploy:
@@ -45,37 +44,37 @@ jobs:
             LICENSE
             Dockerfile-*
 
-    - name: Summarize docs and non-docs modifications
-      run: |
-        echo "List of docs files that have changed: ${{ steps.changed-files-specific.outputs.all_modified_files }}"
-        echo "Changed non-docs files: ${{ steps.changed-files-specific.outputs.other_modified_files }}"
-    
-    # This second step is unnecessary but highly recommended because
-    # It will cache database and saves time re-downloading it if database isn't stale.
-    - name: Cache pip
-      uses: actions/cache@v3
-      with:
-        path: ~/.cache/pip
-        key: ${{ runner.os }}-pip-${{ hashFiles('**/setup.py') }}
-        restore-keys: |
-          ${{ runner.os }}-pip-
-    - name: Set up Python 3.9
-      if: steps.changed-files-specific.outputs.only_modified == 'false' # Run on any non-docs change
-      uses: actions/setup-python@v4
-      with:
-        python-version: 3.9
-    - name: Install dependencies and package
-      if: steps.changed-files-specific.outputs.only_modified == 'false' # Run on any non-docs change
-      run: |
-        sudo apt-get update
-        sudo apt-get install libvips libvips-tools -y
-        python -m pip install --upgrade pip
-        python -m pip install wheel
-        python -m pip install openvino-dev==2023.0.1 mlcube_docker
-        pip install torch==2.2.1 torchvision==0.17.1 torchaudio==2.2.1 --index-url https://download.pytorch.org/whl/cpu
-        pip install -e .
-    - name: Run mlcube deploy tests
-      working-directory: ./testing
-      if: steps.changed-files-specific.outputs.only_modified == 'false' # Run on any non-docs change
-      run: |
-        sh test_deploy.sh
+      - name: Summarize docs and non-docs modifications
+        run: |
+          echo "List of docs files that have changed: ${{ steps.changed-files-specific.outputs.all_modified_files }}"
+          echo "Changed non-docs files: ${{ steps.changed-files-specific.outputs.other_modified_files }}"
+
+      # This second step is unnecessary but highly recommended because
+      # It will cache database and saves time re-downloading it if database isn't stale.
+      - name: Cache pip
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/setup.py') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+      - name: Set up Python 3.9
+        if: steps.changed-files-specific.outputs.only_modified == 'false' # Run on any non-docs change
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.9
+      - name: Install dependencies and package
+        if: steps.changed-files-specific.outputs.only_modified == 'false' # Run on any non-docs change
+        run: |
+          sudo apt-get update
+          sudo apt-get install libvips libvips-tools -y
+          python -m pip install --upgrade pip==24.0
+          python -m pip install wheel
+          python -m pip install openvino-dev==2023.0.1 mlcube_docker
+          pip install torch==2.2.1 torchvision==0.17.1 torchaudio==2.2.1 --index-url https://download.pytorch.org/whl/cpu
+          pip install -e .
+      - name: Run mlcube deploy tests
+        working-directory: ./testing
+        if: steps.changed-files-specific.outputs.only_modified == 'false' # Run on any non-docs change
+        run: |
+          sh test_deploy.sh
