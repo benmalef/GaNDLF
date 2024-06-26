@@ -4,6 +4,7 @@ import yaml
 from pathlib import Path
 
 
+
 def gandlf_logger_setup(
     logger_name, config_path= None
 ) -> logging.Logger:
@@ -11,11 +12,18 @@ def gandlf_logger_setup(
     It sets up the logger. Read from logging_config.
     Args:
         logger_name (str): logger name, the name should be the same in the logging_config
-        config_filename (str): file path for the configuration
+        config_path (str): file path for the configuration
     Returns:
         logging.Logger
     """
+
     if config_path == None:
+        config_dir = Path.cwd()
+        config_path = Path.joinpath(config_dir,"GANDLF/config_gandlf_logger.yaml")
+        
+        
+
+        
         
         
 
