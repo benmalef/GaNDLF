@@ -1,5 +1,7 @@
 import logging
 from logging import config
+
+from importlib import resources
 import yaml
 from pathlib import Path
 
@@ -17,7 +19,7 @@ def gandlf_logger_setup(
     Returns:
         logging.Logger
     """
-    with open(config_path, "r") as file:
+    with resources.open_text("GANDLF", config_path) as file:
         config1 = yaml.safe_load(file)
         logging.config.dictConfig(config1)
 

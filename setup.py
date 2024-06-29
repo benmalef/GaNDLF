@@ -31,7 +31,7 @@ dockerfiles = [
 ]
 
 # Any extra files should be located at `GANDLF` module folder (not in repo root)
-extra_files = []
+extra_files = ["logging_config.yml"]
 toplevel_package_excludes = [
     "testing*",
 ]
