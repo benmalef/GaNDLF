@@ -31,7 +31,11 @@ dockerfiles = [
 ]
 
 # Any extra files should be located at `GANDLF` module folder (not in repo root)
+<<<<<<< logging-config-place
 extra_files = ["logging_config.yml"]
+=======
+extra_files = []
+>>>>>>> add_logging
 toplevel_package_excludes = ["testing*"]
 
 # specifying version for `black` separately because it is also used to [check for lint](https://github.com/mlcommons/GaNDLF/blob/master/.github/workflows/black.yml)
