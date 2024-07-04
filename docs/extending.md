@@ -160,6 +160,7 @@ All the logs are saved in the `tmp/gandlf` directory
 
 Example of log message
 ```
+#format: "%(asctime)s - %(name)s - %(levelname)s - %(pathname)s:%(lineno)d - %(message)s"
 2024-07-03 13:05:51,642 - root - DEBUG - GaNDLF/GANDLF/entrypoints/anonymizer.py:28 - input_dir='.'
 ```
 
