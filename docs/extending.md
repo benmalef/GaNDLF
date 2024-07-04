@@ -132,7 +132,7 @@ bash
 # continue from previous shell
 (venv_gandlf) $> coverage run -m pytest --device cuda; coverage report -m
 ```
-### Logging
+## Logging
 
 ### Use loggers instead of print
 We use the native [`logging` library](https://docs.python.org/3/library/logging.html) for logs management.
