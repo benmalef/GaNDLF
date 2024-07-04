@@ -149,7 +149,7 @@ def my_new_cool_function(df: pd.DataFrame):
     # print("Hi GaNDLF user!")  # don't use prints please.
 ```
 
-#### What and where is logged
+### What and where is logged
 
 GaNDLF logs are splitted into multiple parts:
 - CLI output: only `info` messages are shown here
@@ -164,7 +164,7 @@ Example of log message
 2024-07-03 13:05:51,642 - root - DEBUG - GaNDLF/GANDLF/entrypoints/anonymizer.py:28 - input_dir='.'
 ```
 
-#### Create your own logger
+### Create your own logger
 You can create and configure your own logger in the `GANDLF\logging_config.yaml`.
 
 
