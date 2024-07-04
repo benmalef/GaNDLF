@@ -135,7 +135,7 @@ bash
 ## Logging
 
 ### Use loggers instead of print
-We use the native [`logging` library](https://docs.python.org/3/library/logging.html) for logs management.
+We use the native `logging` [library](https://docs.python.org/3/library/logging.html) for logs management.
 It is already configured. So, If you are extending the code, please use loggers instead of prints.
 
 Here is an example how logger can be used:
