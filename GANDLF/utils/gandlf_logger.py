@@ -8,9 +8,9 @@ import colorlog
 
 def gandlf_logger_setup(log_dir=None, config_path="logging_config.yaml"):
     """
-    It sets up the logger. Read from logging_config.
+    It sets up the logger. Reads from logging_config.
     Args:
-        log_dir (str): logger name, the name should be the same in the logging_config
+        log_dir (str): dir path for saving the logs
         config_path (str): file path for the configuration
 
     """
