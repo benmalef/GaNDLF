@@ -2,30 +2,49 @@ import logging
 import yaml
 from pathlib import Path
 from importlib import resources
+import tempfile
+import os
+import colorlog
+ 
 
-
-def gandlf_logger_setup(config_path="logging_config.yaml") -> logging.Logger:
+def gandlf_logger_setup(log_dir=None,config_path="logging_config.yaml"):
     """
     It sets up the logger. Read from logging_config.
     Args:
-        logger_name (str): logger name, the name should be the same in the logging_config
+        log_dir (str): logger name, the name should be the same in the logging_config
         config_path (str): file path for the configuration
-    Returns:
-        logging.Logger
+        
     """
 
-    # create dir for storing the messages
-    current_dir = Path.cwd()
-    directory = Path.joinpath(current_dir, "tmp/gandlf")
-    directory.mkdir(parents=True, exist_ok=True)
+    if(log_dir == False): # flash logs 
+        formatter = colorlog.ColoredFormatter(
+        "%(log_color)s%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+        datefmt='%Y-%m-%d %H:%M:%S',
+        log_colors={
+        'DEBUG': 'white',
+        'INFO': 'green',
+        'WARNING': 'yellow',
+        'ERROR': 'red',
+        'CRITICAL': 'bold_red'
+    }
+)
+        console_handler = logging.StreamHandler()
+        console_handler.setFormatter(formatter)
+        logging.root.setLevel(logging.DEBUG)
+        logging.root.addHandler(console_handler)
 
-    with resources.open_text("GANDLF", config_path) as file:
-        config_dict = yaml.safe_load(file)
-        logging.config.dictConfig(config_dict)
-
+        
+    else: #
+        output_dir = os.path.normpath(log_dir)
+        Path(output_dir).mkdir(parents=True, exist_ok=True)
+        with resources.open_text("GANDLF", config_path) as file:
+            config_dict = yaml.safe_load(file)
+            config_dict["handlers"]["rotatingFileHandler"]["filename"] = output_dir + "/gandlf.log"
+            logging.config.dictConfig(config_dict)
+    
     logging.captureWarnings(True)
 
-    # return logging.getLogger(logger_name)
+   
 
 
 class InfoOnlyFilter(logging.Filter):
