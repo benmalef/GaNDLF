@@ -33,14 +33,14 @@ def gandlf_logger_setup(log_dir=None, config_path="logging_config.yaml"):
         logging.root.setLevel(logging.DEBUG)
         logging.root.addHandler(console_handler)
 
-    else:  #create the log file
+    else:  # create the log file
         output_dir = Path(log_dir)
         Path(output_dir).mkdir(parents=True, exist_ok=True)
         with resources.open_text("GANDLF", config_path) as file:
             config_dict = yaml.safe_load(file)
-            config_dict["handlers"]["rotatingFileHandler"]["filename"] = str(Path.joinpath(
-                output_dir ,"gandlf.log"
-            ))
+            config_dict["handlers"]["rotatingFileHandler"]["filename"] = str(
+                Path.joinpath(output_dir, "gandlf.log")
+            )
             logging.config.dictConfig(config_dict)
 
     logging.captureWarnings(True)
