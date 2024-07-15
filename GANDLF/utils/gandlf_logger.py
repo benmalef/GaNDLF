@@ -9,6 +9,7 @@ import colorlog
 def gandlf_logger_setup(log_dir=None, config_path="logging_config.yaml"):
     """
     It sets up the logger. Reads from logging_config.
+    If log_dir is None, the logs are flashed to console.
     Args:
         log_dir (str): dir path for saving the logs
         config_path (str): file path for the configuration
@@ -17,10 +18,10 @@ def gandlf_logger_setup(log_dir=None, config_path="logging_config.yaml"):
 
     if log_dir == None:  # flash logs
         formatter = colorlog.ColoredFormatter(
-            "%(log_color)s%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+            "%(log_color)s%(asctime)s - %(name)s - %(levelname)s - %(module)s:%(funcName)s:%(lineno)d - %(message)s",
             datefmt="%Y-%m-%d %H:%M:%S",
             log_colors={
-                "DEBUG": "white",
+                "DEBUG": "blue",
                 "INFO": "green",
                 "WARNING": "yellow",
                 "ERROR": "red",
@@ -32,14 +33,14 @@ def gandlf_logger_setup(log_dir=None, config_path="logging_config.yaml"):
         logging.root.setLevel(logging.DEBUG)
         logging.root.addHandler(console_handler)
 
-    else:  #
-        output_dir = os.path.normpath(log_dir)
+    else:  #create the log file
+        output_dir = Path(log_dir)
         Path(output_dir).mkdir(parents=True, exist_ok=True)
         with resources.open_text("GANDLF", config_path) as file:
             config_dict = yaml.safe_load(file)
-            config_dict["handlers"]["rotatingFileHandler"]["filename"] = (
-                output_dir + "/gandlf.log"
-            )
+            config_dict["handlers"]["rotatingFileHandler"]["filename"] = str(Path.joinpath(
+                output_dir ,"gandlf.log"
+            ))
             logging.config.dictConfig(config_dict)
 
     logging.captureWarnings(True)
