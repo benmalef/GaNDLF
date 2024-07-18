@@ -5,10 +5,43 @@ from importlib import resources
 import colorlog
 
 
+def _flash_to_console():
+    formatter = colorlog.ColoredFormatter(
+        "%(log_color)s%(asctime)s - %(name)s - %(levelname)s - %(module)s:%(funcName)s:%(lineno)d - %(message)s",
+        datefmt="%Y-%m-%d %H:%M:%S",
+        log_colors={
+            "DEBUG": "blue",
+            "INFO": "green",
+            "WARNING": "yellow",
+            "ERROR": "red",
+            "CRITICAL": "bold_red",
+        },
+    )
+    console_handler = logging.StreamHandler()
+    console_handler.setFormatter(formatter)
+    logging.root.setLevel(logging.DEBUG)
+    logging.root.addHandler(console_handler)
+
+
+def _create_log_file(log_file):
+    log_file = Path(log_file)
+    output_dir = log_file.parent
+    Path(output_dir).mkdir(parents=True, exist_ok=True)
+    log_file.write_text("Starting GaNDLF logging session \n")
+
+
+def _save_logs_in_file(log_file, config_path):
+    _create_log_file(log_file)
+    with resources.open_text("GANDLF", config_path) as file:
+        config_dict = yaml.safe_load(file)
+        config_dict["handlers"]["rotatingFileHandler"]["filename"] = str(log_file)
+        logging.config.dictConfig(config_dict)
+
+
 def gandlf_logger_setup(log_file=None, config_path="logging_config.yaml"):
     """
     It sets up the logger. Reads from logging_config.
- 
+
     Args:
         log_file (str): dir path for saving the logs, defaults to `None`, at which time logs are flushed to console.
         config_path (str): file path for the configuration
@@ -16,31 +49,15 @@ def gandlf_logger_setup(log_file=None, config_path="logging_config.yaml"):
     """
 
     if log_file is None:  # flash logs
-        formatter = colorlog.ColoredFormatter(
-            "%(log_color)s%(asctime)s - %(name)s - %(levelname)s - %(module)s:%(funcName)s:%(lineno)d - %(message)s",
-            datefmt="%Y-%m-%d %H:%M:%S",
-            log_colors={
-                "DEBUG": "blue",
-                "INFO": "green",
-                "WARNING": "yellow",
-                "ERROR": "red",
-                "CRITICAL": "bold_red",
-            },
-        )
-        console_handler = logging.StreamHandler()
-        console_handler.setFormatter(formatter)
-        logging.root.setLevel(logging.DEBUG)
-        logging.root.addHandler(console_handler)
+        _flash_to_console()
 
     else:  # create the log file
-        output_dir = Path(log_file)
-        Path(output_dir).mkdir(parents=True, exist_ok=True)
-        with resources.open_text("GANDLF", config_path) as file:
-            config_dict = yaml.safe_load(file)
-            config_dict["handlers"]["rotatingFileHandler"]["filename"] = str(
-                Path.joinpath(output_dir, "gandlf.log")
-            )
-            logging.config.dictConfig(config_dict)
+        try:
+            _save_logs_in_file(log_file, config_path)
+        except Exception as e:
+            _flash_to_console()
+            logging.error(f"{e}")
+            logging.warning("The logs will be flushed to console")
 
     logging.captureWarnings(True)
 
