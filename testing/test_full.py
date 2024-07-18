@@ -3189,7 +3189,7 @@ def test_generic_data_split():
 
 def test_generic_logging(capsys):
     print("52: Starting test for logging")
-    log_file = "testing/log/gandlf.log"
+    log_file = "testing/gandlf.log"
     gandlf_logger_setup(log_file)
     message = "Testing logging"
 
@@ -3200,7 +3200,7 @@ def test_generic_logging(capsys):
         logs = file.read()
         assert message in logs
 
-    shutil.rmtree(Path(log_file).parent)
+    os.remove(log_file)
 
     # test the stout info level. The stout must show only INFO messages
     message = "Testing stout logging"
