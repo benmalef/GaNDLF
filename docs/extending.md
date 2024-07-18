@@ -157,7 +157,7 @@ GaNDLF logs are splitted into multiple parts:
 
 By default, the logs are flushed to console.
 The logs are **saved** in the path that is defined by the '--log-file' parameter in the CLI commands.
-If the path is not provided or an error is raised, the logs are flushed to console.
+If the path is not provided or an error is raised, the logs will be flushed to console.
 
 
 

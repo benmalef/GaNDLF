@@ -7,7 +7,7 @@ import colorlog
 
 def _flash_to_console():
     formatter = colorlog.ColoredFormatter(
-        "%(log_color)s%(asctime)s - %(name)s - %(levelname)s - %(module)s:%(funcName)s:%(lineno)d - %(message)s",
+        "%(log_color)s%(asctime)s - %(levelname)s - %(message)s",
         datefmt="%Y-%m-%d %H:%M:%S",
         log_colors={
             "DEBUG": "blue",
@@ -25,8 +25,6 @@ def _flash_to_console():
 
 def _create_log_file(log_file):
     log_file = Path(log_file)
-    output_dir = log_file.parent
-    Path(output_dir).mkdir(parents=True, exist_ok=True)
     log_file.write_text("Starting GaNDLF logging session \n")
 
 
@@ -48,6 +46,8 @@ def gandlf_logger_setup(log_file=None, config_path="logging_config.yaml"):
 
     """
 
+    logging.captureWarnings(True)
+
     if log_file is None:  # flash logs
         _flash_to_console()
 
@@ -55,11 +55,8 @@ def gandlf_logger_setup(log_file=None, config_path="logging_config.yaml"):
         try:
             _save_logs_in_file(log_file, config_path)
         except Exception as e:
-            _flash_to_console()
-            logging.error(f"{e}")
+            logging.error(f"log_file:{e}")
             logging.warning("The logs will be flushed to console")
-
-    logging.captureWarnings(True)
 
 
 class InfoOnlyFilter(logging.Filter):
