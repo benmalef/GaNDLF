@@ -5,17 +5,17 @@ from importlib import resources
 import colorlog
 
 
-def gandlf_logger_setup(log_dir=None, config_path="logging_config.yaml"):
+def gandlf_logger_setup(log_file=None, config_path="logging_config.yaml"):
     """
     It sets up the logger. Reads from logging_config.
-    If log_dir is None, the logs are flashed to console.
+ 
     Args:
-        log_dir (str): dir path for saving the logs
+        log_file (str): dir path for saving the logs, defaults to `None`, at which time logs are flushed to console.
         config_path (str): file path for the configuration
 
     """
 
-    if log_dir == None:  # flash logs
+    if log_file is None:  # flash logs
         formatter = colorlog.ColoredFormatter(
             "%(log_color)s%(asctime)s - %(name)s - %(levelname)s - %(module)s:%(funcName)s:%(lineno)d - %(message)s",
             datefmt="%Y-%m-%d %H:%M:%S",
@@ -33,7 +33,7 @@ def gandlf_logger_setup(log_dir=None, config_path="logging_config.yaml"):
         logging.root.addHandler(console_handler)
 
     else:  # create the log file
-        output_dir = Path(log_dir)
+        output_dir = Path(log_file)
         Path(output_dir).mkdir(parents=True, exist_ok=True)
         with resources.open_text("GANDLF", config_path) as file:
             config_dict = yaml.safe_load(file)
