@@ -66,9 +66,9 @@ def gandlf_logger_setup(log_file=None, config_path="logging_config.yaml"):
             _create_log_file(log_file)
             _save_logs_in_file(log_file, config_path)
     except Exception as e:
-                _flush_to_console()
-                logging.error(f"log_file:{e}")
-                logging.warning("The logs will be flushed to console")
+        _flush_to_console()
+        logging.error(f"log_file:{e}")
+        logging.warning("The logs will be flushed to console")
 
 
 class InfoOnlyFilter(logging.Filter):
