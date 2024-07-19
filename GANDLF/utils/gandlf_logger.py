@@ -26,9 +26,9 @@ def _flush_to_console():
 
 def _create_tmp_log_file():
     tmp_dir = Path(tempfile.gettempdir())
-    log_dir = Path.joinpath(tmp_dir, "gandlf")
+    log_dir = Path.joinpath(tmp_dir, ".gandlf")
     log_dir.mkdir(parents=True, exist_ok=True)
-    log_file = Path.joinpath(log_dir, "gandlf.log")
+    log_file = Path.joinpath(log_dir, get_unique_timestamp() + ".log")
     _create_log_file(log_file)
     return log_file
 
