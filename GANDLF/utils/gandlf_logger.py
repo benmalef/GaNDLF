@@ -56,25 +56,18 @@ def gandlf_logger_setup(log_file=None, config_path="logging_config.yaml"):
     """
 
     logging.captureWarnings(True)
-
-    if log_file is None:  # create tmp file
-        try:
+    try:
+        if log_file is None:  # create tmp file
             log_tmp_file = _create_tmp_log_file()
             _save_logs_in_file(log_tmp_file, config_path)
             logging.info(f"The logs are saved in {log_tmp_file}")
-        except Exception as e:
-            _flush_to_console()
-            logging.error(f"log_file:{e}")
-            logging.warning("The logs will be flushed to console")
-
-    else:  # create the log file
-        try:
+        else:  # create the log file
             _create_log_file(log_file)
             _save_logs_in_file(log_file, config_path)
-        except Exception as e:
-            _flush_to_console()
-            logging.error(f"log_file:{e}")
-            logging.warning("The logs will be flushed to console")
+    except Exception as e:
+                _flush_to_console()
+                logging.error(f"log_file:{e}")
+                logging.warning("The logs will be flushed to console")
 
 
 class InfoOnlyFilter(logging.Filter):
