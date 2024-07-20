@@ -18,7 +18,7 @@ filters:
     (): logging.Filter
     name: "py.warnings"
   info_only_filter:
-    (): GANDLF.utils.logging.InfoOnlyFilter
+    (): GANDLF.utils.gandlf_logging.InfoOnlyFilter
 handlers:
   stdoutHandler: # only display info level
     class: logging.StreamHandler
