@@ -25,7 +25,7 @@ def gandlf(ctx, loglevel):
     ctx.ensure_object(dict)
     ctx.obj["LOGLEVEL"] = loglevel
     # setup_logging(loglevel)
-    gandlf_logger_setup()
+    logger_setup()
 
 
 # registers subcommands: `gandlf anonymizer`, `gandlf run`, etc.
