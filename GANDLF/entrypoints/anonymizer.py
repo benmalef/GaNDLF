@@ -12,7 +12,7 @@ from deprecated import deprecated
 from GANDLF.anonymize import run_anonymizer
 from GANDLF.cli import copyrightMessage
 from GANDLF.entrypoints import append_copyright_to_help
-from GANDLF.utils.logging import logger_setup
+from GANDLF.utils.gandlf_logging import logger_setup
 
 
 def _anonymize_images(

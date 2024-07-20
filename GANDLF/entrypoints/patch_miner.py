@@ -10,7 +10,7 @@ import click
 from GANDLF.cli.patch_extraction import patch_extraction
 from GANDLF.cli import copyrightMessage
 from GANDLF.entrypoints import append_copyright_to_help
-from GANDLF.utils.logging import logger_setup
+from GANDLF.utils import logger_setup
 
 
 def _mine_patches(input_path: str, output_dir: str, config: Optional[str]):

@@ -9,7 +9,7 @@ import click
 
 from GANDLF.cli import copyrightMessage, post_training_model_optimization
 from GANDLF.entrypoints import append_copyright_to_help
-from GANDLF.utils.logging import logger_setup
+from GANDLF.utils import logger_setup
 
 
 def _optimize_model(

@@ -4,7 +4,7 @@ import click
 
 from GANDLF.cli import config_generator, copyrightMessage
 from GANDLF.entrypoints import append_copyright_to_help
-from GANDLF.utils.logging import logger_setup
+from GANDLF.utils import logger_setup
 
 
 def _generate_config(config: str, strategy: str, output: str):

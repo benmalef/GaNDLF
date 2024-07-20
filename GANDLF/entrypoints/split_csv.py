@@ -12,7 +12,7 @@ from deprecated.classic import deprecated
 
 from GANDLF.cli import copyrightMessage, split_data_and_save_csvs
 from GANDLF.entrypoints import append_copyright_to_help
-from GANDLF.utils.logging import logger_setup
+from GANDLF.utils import logger_setup
 
 
 def _split_csv(input_csv: str, output_dir: str, config_path: Optional[str]):
