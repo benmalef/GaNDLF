@@ -3,7 +3,7 @@ import logging
 import click
 from .subcommands import cli_subcommands
 from GANDLF.entrypoints import append_copyright_to_help
-from GANDLF.utils import gandlf_logger_setup
+from GANDLF.utils import logger_setup
 from GANDLF import version
 
 
