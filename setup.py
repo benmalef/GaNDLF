@@ -83,6 +83,8 @@ requirements = [
     "colorlog",
     "opacus==1.5.2",
     "huggingface-hub==0.25.1",
+    "openslide-bin",
+    "openslide-python"
 ]
 
 if __name__ == "__main__":
