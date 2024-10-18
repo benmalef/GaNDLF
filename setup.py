@@ -52,7 +52,6 @@ requirements = [
     "setuptools",
     "seaborn",
     "pyyaml==6.0.1",
-    "tiffslide",
     "matplotlib",
     "gdown==5.1.0",
     "pytest",
