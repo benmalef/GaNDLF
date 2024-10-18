@@ -15,7 +15,7 @@ from torch.utils.data import DataLoader
 from skimage.io import imsave
 from tqdm import tqdm
 from torch.cuda.amp import autocast
-import tiffslide as openslide
+import openslide
 from GANDLF.data import get_testing_loader
 from GANDLF.utils import (
     best_model_path_end,

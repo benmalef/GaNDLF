@@ -1,7 +1,7 @@
 import os
 from typing import Optional
 import numpy as np
-import tiffslide
+import openslide
 from GANDLF.data.patch_miner.opm.utils import get_patch_size_in_microns, tissue_mask
 from skimage.transform import resize
 from torch.utils.data.dataset import Dataset
