@@ -538,7 +538,7 @@ def get_patch_size_in_microns(
                         "Original patch size in microns for dimension {}",
                         format(size_in_microns),
                     )
-                if magnification > 0:
+                if float(magnification) > 0:
                     return_patch_size[i] = round(size_in_microns / magnification)
                     magnification_prev = magnification
             else:
