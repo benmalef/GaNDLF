@@ -6,13 +6,13 @@
 import sys, re, os
 from setuptools import setup, find_packages
 
+
 try:
     with open("README.md") as readme_file:
         readme = readme_file.read()
 except Exception as error:
     readme = "No README information found."
     sys.stderr.write("Warning: Could not open '%s' due %s\n" % ("README.md", error))
-
 
 try:
     filepath = "GANDLF/version.py"

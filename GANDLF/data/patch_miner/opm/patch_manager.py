@@ -7,7 +7,7 @@ import numpy as np
 from tqdm import tqdm
 from pathlib import Path
 import pandas as pd
-import tiffslide
+import openslide as tiffslide
 
 
 class PatchManager:

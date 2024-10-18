@@ -17,7 +17,7 @@ import cv2
 
 # import matplotlib.pyplot as plt
 import yaml
-import tiffslide
+import openslide as tiffslide
 
 # RGB Masking (pen) constants
 RGB_RED_CHANNEL = 0
