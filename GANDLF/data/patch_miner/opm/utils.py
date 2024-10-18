@@ -505,11 +505,11 @@ def get_patch_size_in_microns(
                         "Using mpp to calculate patch size for dimension {}".format(i)
                     )
                 # only enter if "m" is present in patch size
-                input_slide = tiffslide.open_slide(input_slide_path)
+                input_slide = openslide.open_slide(input_slide_path)
                 metadata = input_slide.properties
                 if i == 0:
                     for _property in [
-                        tiffslide.PROPERTY_NAME_MPP_X,
+                        openslide.PROPERTY_NAME_MPP_X,
                         "tiff.XResolution",
                         "XResolution",
                     ]:
@@ -519,7 +519,7 @@ def get_patch_size_in_microns(
                             break
                 elif i == 1:
                     for _property in [
-                        tiffslide.PROPERTY_NAME_MPP_Y,
+                        openslide.PROPERTY_NAME_MPP_Y,
                         "tiff.YResolution",
                         "YResolution",
                     ]:

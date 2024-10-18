@@ -4,10 +4,8 @@ import logging
 import os
 import argparse
 import ast
-import openslide
-# import traceback
-from typing import Optional
 
+from typing import Optional
 from deprecated import deprecated
 import click
 

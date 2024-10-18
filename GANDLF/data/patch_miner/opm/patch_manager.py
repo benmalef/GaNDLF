@@ -9,6 +9,7 @@ from pathlib import Path
 import pandas as pd
 import openslide
 
+
 class PatchManager:
     def __init__(self, filename, output_dir):
         """
