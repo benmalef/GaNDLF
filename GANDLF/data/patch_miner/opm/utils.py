@@ -514,7 +514,7 @@ def get_patch_size_in_microns(
                         "XResolution",
                     ]:
                         if _property in metadata:
-                            magnification = metadata[_property]
+                            magnification = float(metadata[_property])
                             magnification_prev = magnification
                             break
                 elif i == 1:
