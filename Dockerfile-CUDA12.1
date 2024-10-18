@@ -23,7 +23,7 @@ RUN python3.9 -c "from setup import requirements; file = open('requirements.txt'
 COPY . /GaNDLF
 WORKDIR /GaNDLF
 RUN python3.9 -m pip install -e .
-
+ENV LD_LIBRARY_PATH="/usr/local/lib/python3.9/dist-packages/openslide_bin:$LD_LIBRARY_PATH"
 # Entrypoint forces all commands given via "docker run" to go through python, CMD forces the default entrypoint script argument to be gandlf run
 # If a user calls "docker run gandlf:[tag] anonymize", it will resolve to running "gandlf anonymize" instead.
 # CMD is inherently overridden by args to "docker run", entrypoint is constant.
