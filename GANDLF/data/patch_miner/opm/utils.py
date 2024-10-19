@@ -509,22 +509,22 @@ def get_patch_size_in_microns(
                 metadata = input_slide.properties
                 if i == 0:
                     for _property in [
-                        openslide.PROPERTY_NAME_MPP_X,
+                        tiffslide.PROPERTY_NAME_MPP_X,
                         "tiff.XResolution",
                         "XResolution",
                     ]:
                         if _property in metadata:
-                            magnification = float(metadata[_property])
+                            magnification = metadata[_property]
                             magnification_prev = magnification
                             break
                 elif i == 1:
                     for _property in [
-                        openslide.PROPERTY_NAME_MPP_Y,
+                        tiffslide.PROPERTY_NAME_MPP_Y,
                         "tiff.YResolution",
                         "YResolution",
                     ]:
                         if _property in metadata:
-                            magnification = float(metadata[_property])
+                            magnification = metadata[_property]
                             break
                     if magnification == -1:
                         # if y-axis data is missing, use x-axis data
@@ -538,7 +538,7 @@ def get_patch_size_in_microns(
                         "Original patch size in microns for dimension {}",
                         format(size_in_microns),
                     )
-                if float(magnification) > 0:
+                if magnification > 0:
                     return_patch_size[i] = round(size_in_microns / magnification)
                     magnification_prev = magnification
             else:

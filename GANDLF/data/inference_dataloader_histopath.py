@@ -134,7 +134,7 @@ class InferTumorSegDataset(Dataset):
             (x_loc, y_loc),
             self._selected_level,
             (self._patch_size[0], self._patch_size[1]),
-            # as_array=True,
+            as_array=True,
         )
 
         # this is to ensure that channels come at the beginning
