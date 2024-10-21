@@ -63,9 +63,8 @@ class InferTumorSegDataset(Dataset):
             mask = get_tissue_mask(np.asarray(
                 self._os_image.read_region(
                     (0, 0), self._mask_level, (mask_xdim, mask_ydim)
-                ))
+                ).convert('RGB'))
             )
-
             if self._selected_level != self._mask_level:
                 mask = resize(mask, (height, width))
             mask = (mask > 0).astype(np.ubyte)
