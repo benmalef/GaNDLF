@@ -344,12 +344,11 @@ def inference_loop(
                         )
                         cv2.imwrite(file_to_write, heatmaps[key])
 
-                        os_image_array = os_image.read_region(
+                        os_image_array = np.asarray(os_image.read_region(
                             (0, 0),
                             parameters["slide_level"],
-                            (level_width, level_height),
-                            as_array=True,
-                        )
+                            (level_width, level_height)
+                        ))
                         blended_image = cv2.addWeighted(
                             os_image_array,
                             parameters["blending_alpha"],
