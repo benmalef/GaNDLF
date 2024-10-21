@@ -65,7 +65,7 @@ class InferTumorSegDataset(Dataset):
                     (0, 0), self._mask_level, (mask_xdim, mask_ydim)
                 )
             )
-
+            mask = np.asarray(mask)
             if self._selected_level != self._mask_level:
                 mask = resize(mask, (height, width))
             mask = (mask > 0).astype(np.ubyte)
@@ -134,13 +134,12 @@ class InferTumorSegDataset(Dataset):
             (x_loc, y_loc),
             self._selected_level,
             (self._patch_size[0], self._patch_size[1]),
-            # as_array=True, openslide-python doesn't have as_array
+            # as_array=True, openslide-python doesn't return an ndarray, return an image
         )
 
-        patch = np.asarray(patch)
+        patch = np.asarray(patch) # convert the image to ndarray
         # this is to ensure that channels come at the beginning
         patch = patch.transpose([2, 0, 1])
-        # patch = patch.transpose(5) # check the documentation
         # this is to ensure that we always have a z-stack before applying any torchio transforms
         patch = np.expand_dims(patch, axis=-1)
         if self.transform is not None:
