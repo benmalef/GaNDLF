@@ -130,16 +130,16 @@ class InferTumorSegDataset(Dataset):
             (string, int, int): The patch, x and y locations.
         """
         x_loc, y_loc = self._points[idx]
-        patch = self._os_image.read_region(
+        patch = np.asarray(self._os_image.read_region(
             (x_loc, y_loc),
             self._selected_level,
             (self._patch_size[0], self._patch_size[1]),
             # as_array=True, openslide-python doesn't have as_array
-        )
+        ))
 
         # this is to ensure that channels come at the beginning
-        # patch = patch.transpose([2, 0, 1])
-        patch = patch.transpose(5) # check the documentation
+        patch = patch.transpose([2, 0, 1])
+        # patch = patch.transpose(5) # check the documentation
         # this is to ensure that we always have a z-stack before applying any torchio transforms
         patch = np.expand_dims(patch, axis=-1)
         if self.transform is not None:
