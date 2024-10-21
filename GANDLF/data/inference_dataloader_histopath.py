@@ -60,12 +60,12 @@ class InferTumorSegDataset(Dataset):
         height, width = self._os_image.level_dimensions[self._selected_level]
         try:
             mask_xdim, mask_ydim = self._os_image.level_dimensions[self._mask_level]
-            mask = get_tissue_mask(
+            mask = get_tissue_mask(np.asarray(
                 self._os_image.read_region(
                     (0, 0), self._mask_level, (mask_xdim, mask_ydim)
-                )
+                ))
             )
-            mask = np.asarray(mask)
+
             if self._selected_level != self._mask_level:
                 mask = resize(mask, (height, width))
             mask = (mask > 0).astype(np.ubyte)
