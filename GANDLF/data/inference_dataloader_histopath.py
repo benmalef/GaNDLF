@@ -134,7 +134,7 @@ class InferTumorSegDataset(Dataset):
             (x_loc, y_loc),
             self._selected_level,
             (self._patch_size[0], self._patch_size[1]),
-            as_array=True,
+            # as_array=True, openslide-python doesn't have as_array
         )
 
         # this is to ensure that channels come at the beginning
