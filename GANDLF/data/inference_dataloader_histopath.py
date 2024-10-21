@@ -60,10 +60,12 @@ class InferTumorSegDataset(Dataset):
         height, width = self._os_image.level_dimensions[self._selected_level]
         try:
             mask_xdim, mask_ydim = self._os_image.level_dimensions[self._mask_level]
-            mask = get_tissue_mask(np.asarray(
-                self._os_image.read_region(
-                    (0, 0), self._mask_level, (mask_xdim, mask_ydim)
-                ).convert('RGB'))
+            mask = get_tissue_mask(
+                np.asarray(
+                    self._os_image.read_region(
+                        (0, 0), self._mask_level, (mask_xdim, mask_ydim)
+                    ).convert("RGB")
+                )
             )
             if self._selected_level != self._mask_level:
                 mask = resize(mask, (height, width))
@@ -133,10 +135,10 @@ class InferTumorSegDataset(Dataset):
             (x_loc, y_loc),
             self._selected_level,
             (self._patch_size[0], self._patch_size[1]),
-            # as_array=True, openslide-python doesn't return an ndarray, return an image
+            # as_array=True, openslide-python doesn't return a ndarray, return an image
         )
 
-        patch = np.asarray(patch) # convert the image to ndarray
+        patch = np.asarray(patch)  # convert the image to ndarray
         # this is to ensure that channels come at the beginning
         patch = patch.transpose([2, 0, 1])
         # this is to ensure that we always have a z-stack before applying any torchio transforms
