@@ -514,7 +514,7 @@ def get_patch_size_in_microns(
                         "XResolution",
                     ]:
                         if _property in metadata:
-                            magnification = int(float(metadata[_property]))
+                            magnification = float(metadata[_property])
                             magnification_prev = magnification
                             break
                 elif i == 1:
@@ -524,7 +524,7 @@ def get_patch_size_in_microns(
                         "YResolution",
                     ]:
                         if _property in metadata:
-                            magnification = int(float(metadata[_property]))
+                            magnification = float(metadata[_property])
                             break
                     if magnification == -1:
                         # if y-axis data is missing, use x-axis data
