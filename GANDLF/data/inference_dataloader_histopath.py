@@ -137,7 +137,7 @@ class InferTumorSegDataset(Dataset):
             # as_array=True, openslide-python doesn't have as_array
         )
 
-        patch = np.asrray(patch)
+        patch = np.asarray(patch)
         # this is to ensure that channels come at the beginning
         # patch = patch.transpose([2, 0, 1])
         # patch = patch.transpose(5) # check the documentation
