@@ -62,7 +62,7 @@ class InferTumorSegDataset(Dataset):
             mask_xdim, mask_ydim = self._os_image.level_dimensions[self._mask_level]
             mask = get_tissue_mask(
                 self._os_image.read_region(
-                    (0, 0), self._mask_level, (mask_xdim, mask_ydim), as_array=True
+                    (0, 0), self._mask_level, (mask_xdim, mask_ydim)
                 )
             )
 
@@ -139,7 +139,7 @@ class InferTumorSegDataset(Dataset):
 
         patch = np.asarray(patch)
         # this is to ensure that channels come at the beginning
-        # patch = patch.transpose([2, 0, 1])
+        patch = patch.transpose([2, 0, 1])
         # patch = patch.transpose(5) # check the documentation
         # this is to ensure that we always have a z-stack before applying any torchio transforms
         patch = np.expand_dims(patch, axis=-1)
