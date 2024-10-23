@@ -52,7 +52,7 @@ class PatchManager:
         """
         self.label_map = convert_to_tiff(path, self.output_dir, "mask")
         self.label_map_object = openslide.open_slide(self.label_map)
-        print("label_map",label_map_object)
+        print("label_map",self.label_map_object)
 
         assert all(
             x == y for x, y in zip(self.label_map_object.dimensions, self.slide_dims)
