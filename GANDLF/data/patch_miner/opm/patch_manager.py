@@ -43,7 +43,9 @@ class PatchManager:
         self.img_path = convert_to_tiff(self.img_path, self.output_dir, "img")
         self.slide_object = openslide.open_slide(self.img_path)
         self.slide_dims = self.slide_object.dimensions
-        print("slide_path :",self.slide_object)
+        print("slide_path:",self.slide_object)
+        print("slide_dims:", self.slide_dims)
+
 
     def set_label_map(self, path):
         """
