@@ -170,6 +170,7 @@ def inference_loop(
             os_image = openslide.open_slide(
                 row[parameters["headers"]["channelHeaders"]].values[0]
             )
+            print(os_image)
             max_defined_slide_level = os_image.level_count - 1
             parameters["slide_level"] = min(
                 parameters["slide_level"], max_defined_slide_level

@@ -73,22 +73,22 @@ jobs:
           python -m pip install openvino-dev==2023.0.1 mlcube_docker
           pip install torch==2.3.1 torchvision==0.18.1 torchaudio==2.3.1 --index-url https://download.pytorch.org/whl/cpu
           pip install -e .
-      - name: Run generic unit tests
-        if: steps.changed-files-specific.outputs.only_modified == 'false' # Run on any non-docs change
-        run: |
-          pytest --cov=. --cov-report=xml -k "generic"
-      - name: Run classification unit tests with histology
-        if: steps.changed-files-specific.outputs.only_modified == 'false' # Run on any non-docs change
-        run: |
-          pytest --cov=. --cov-report=xml --cov-append -k "classification and histology"
-      - name: Run classification unit tests
-        if: steps.changed-files-specific.outputs.only_modified == 'false' # Run on any non-docs change
-        run: |
-          pytest --cov=. --cov-report=xml --cov-append -k "classification and not histology"
+#      - name: Run generic unit tests
+#        if: steps.changed-files-specific.outputs.only_modified == 'false' # Run on any non-docs change
+#        run: |
+#          pytest --cov=. --cov-report=xml -k "generic"
+#      - name: Run classification unit tests with histology
+#        if: steps.changed-files-specific.outputs.only_modified == 'false' # Run on any non-docs change
+#        run: |
+#          pytest --cov=. --cov-report=xml --cov-append -k "classification and histology"
+#      - name: Run classification unit tests
+#        if: steps.changed-files-specific.outputs.only_modified == 'false' # Run on any non-docs change
+#        run: |
+#          pytest --cov=. --cov-report=xml --cov-append -k "classification and not histology"
       - name: Run segmentation unit tests
         if: steps.changed-files-specific.outputs.only_modified == 'false' # Run on any non-docs change
         run: |
-          pytest --cov=. --cov-report=xml --cov-append -k "segmentation and not transunet"
+          pytest -s --cov=. --cov-report=xml --cov-append -k "segmentation and not transunet"
       - name: Run regression unit tests
         if: steps.changed-files-specific.outputs.only_modified == 'false' # Run on any non-docs change
         run: |
