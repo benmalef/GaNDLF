@@ -345,6 +345,7 @@ def patch_artifact_check(
         bool: Whether the patch is valid or not.
     """
     # patch_size = config["patch_size"]
+    img= cv2.cvtColor(img,cv2.COLOR_RGBA2RGB)
     patch_hsv = cv2.cvtColor(img, cv2.COLOR_RGB2HSV)
     count_white_pixels = np.sum(np.logical_and.reduce(img > intensity_thresh, axis=2))
     percent_pixels = count_white_pixels / (patch_size[0] * patch_size[1])
@@ -435,6 +436,7 @@ def generate_initial_mask(slide_path: str, scale: int) -> Tuple[np.ndarray, tupl
     slide_thumbnail = np.asarray(
         slide.get_thumbnail((slide_dims[0] // scale, slide_dims[1] // scale))
     )
+    print("tissue",slide_thumbnail)
     real_scale = (
         slide_dims[0] / slide_thumbnail.shape[1],
         slide_dims[1] / slide_thumbnail.shape[0],
