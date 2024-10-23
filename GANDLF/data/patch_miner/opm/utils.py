@@ -345,7 +345,6 @@ def patch_artifact_check(
         bool: Whether the patch is valid or not.
     """
     # patch_size = config["patch_size"]
-    img= cv2.cvtColor(img,cv2.COLOR_BGRA2BGR)
     patch_hsv = cv2.cvtColor(img, cv2.COLOR_RGB2HSV)
     count_white_pixels = np.sum(np.logical_and.reduce(img > intensity_thresh, axis=2))
     percent_pixels = count_white_pixels / (patch_size[0] * patch_size[1])
