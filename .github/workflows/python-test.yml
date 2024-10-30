@@ -88,7 +88,7 @@ jobs:
       - name: Run segmentation unit tests
         if: steps.changed-files-specific.outputs.only_modified == 'false' # Run on any non-docs change
         run: |
-          pytest -s --cov=. --cov-report=xml --cov-append -k "segmentation and not transunet"
+          pytest --cov=. --cov-report=xml --cov-append -k "segmentation and not transunet"
       - name: Run regression unit tests
         if: steps.changed-files-specific.outputs.only_modified == 'false' # Run on any non-docs change
         run: |
