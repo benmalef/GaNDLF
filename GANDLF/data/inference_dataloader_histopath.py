@@ -136,7 +136,7 @@ class InferTumorSegDataset(Dataset):
             self._selected_level,
             (self._patch_size[0], self._patch_size[1]),
             # as_array=True, openslide-python doesn't return a ndarray, return an image
-        ).convert('RGB')
+        ).convert("RGB")
 
         patch = np.asarray(patch)  # convert the image to ndarray
         # this is to ensure that channels come at the beginning
