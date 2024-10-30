@@ -435,7 +435,6 @@ def generate_initial_mask(slide_path: str, scale: int) -> Tuple[np.ndarray, tupl
     slide_thumbnail = np.asarray(
         slide.get_thumbnail((slide_dims[0] // scale, slide_dims[1] // scale))
     )
-    print("tissue",slide_thumbnail)
     real_scale = (
         slide_dims[0] / slide_thumbnail.shape[1],
         slide_dims[1] / slide_thumbnail.shape[0],
