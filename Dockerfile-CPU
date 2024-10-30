@@ -23,11 +23,8 @@ RUN python3.9 -m pip install -e .
 # Entrypoint forces all commands given via "docker run" to go through python, CMD forces the default entrypoint script argument to be gandlf run
 # If a user calls "docker run gandlf:[tag] anonymize", it will resolve to running "gandlf anonymize" instead.
 # CMD is inherently overridden by args to "docker run", entrypoint is constant.
-
-
-#ENTRYPOINT gandlf
-CMD pytest
-#CMD /bin/bash
+ENTRYPOINT gandlf
+CMD run
 
 # The below force the container commands to run as a nonroot user with UID > 10000.
 # This greatly reduces UID collision probability between container and host, helping prevent privilege escalation attacks.
@@ -35,7 +32,7 @@ CMD pytest
 # See https://github.com/hexops/dockerfile as a best practices guide.
 #RUN addgroup --gid 10001 --system nonroot \
 # && adduser  --uid 10000 --system --ingroup nonroot --home /home/nonroot nonroot
-# 
+#
 #USER nonroot
 
 # Prepare the container for possible model embedding later.
