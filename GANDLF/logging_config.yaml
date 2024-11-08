@@ -20,17 +20,17 @@ filters:
   info_only_filter:
     (): GANDLF.utils.gandlf_logging.InfoOnlyFilter
 handlers:
-  stdoutHandler: # only display info level
+  stdoutHandler: # flush the log to console
     class: logging.StreamHandler
-    level: INFO
+    level: DEBUG
     formatter: simple
-    filters: [info_only_filter]
+#    filters: [info_only_filter]
     stream: ext://sys.stdout
-  stderrHandler: # display warning and above messages
-    class: logging.StreamHandler
-    level: WARNING
-    formatter: detailed
-    stream: ext://sys.stderr
+#  stderrHandler:
+#    class: logging.StreamHandler
+#    level: WARNING
+#    formatter: detailed
+#    stream: ext://sys.stderr
   rotatingFileHandler:
     class: logging.handlers.RotatingFileHandler
     level: DEBUG
@@ -40,8 +40,8 @@ handlers:
 loggers: # you can add your customized logger
   debug_logger:
     level: DEBUG
-    handlers: [stdoutHandler, rotatingFileHandler, stderrHandler]
+    handlers: [stdoutHandler, rotatingFileHandler]
     propagate: no
 root:
   level: DEBUG
-  handlers: [stdoutHandler, rotatingFileHandler, stderrHandler]
+  handlers: [stdoutHandler, rotatingFileHandler]
