@@ -7,8 +7,11 @@ from GANDLF.utils import get_unique_timestamp
 import sys
 
 
-def _create_tmp_log_file():
-    tmp_dir = Path.home()
+def _create_tmp_log_file(option):
+    if(option == "home"):
+     tmp_dir = Path.home()
+    if(option == "temp"):
+     tmp_dir = Path(tempfile.gettempdir())
     log_dir = Path.joinpath(tmp_dir, ".gandlf")
     log_dir.mkdir(parents=True, exist_ok=True)
     log_file = Path.joinpath(log_dir, get_unique_timestamp() + ".log")
@@ -23,7 +26,12 @@ def _create_log_file(log_file):
 def _configure_logging_with_logfile(log_file, config_path):
     with resources.open_text("GANDLF", config_path) as file:
         config_dict = yaml.safe_load(file)
-        config_dict["handlers"]["rotatingFileHandler"]["filename"] = str(log_file)
+        if(log_file is not None):
+         config_dict["handlers"]["rotatingFileHandler"]["filename"] = str(log_file)
+        if(log_file is None): # the logs flush only to console
+            config_dict["handlers"].pop("rotatingFileHandler")
+            config_dict["handlers"]["stderrHandler"]["formatter"] = "simple"
+            config_dict["root"]["handlers"] = ["stdoutHandler", "stderrHandler"]
         logging.config.dictConfig(config_dict)
 
 
@@ -33,6 +41,11 @@ def gandlf_excepthook(exctype, value, tb):
     else:
         sys.__excepthook__(exctype, value, tb)
 
+def log_messages(log_file):
+    if(log_file is None):
+        logging.info(f"The logs flush to console. If you want to save the log, use the --log-file parameter")
+    else:
+        logging.info(f"The logs are saved in {log_file}")
 
 def logger_setup(log_file=None, config_path="logging_config.yaml") -> None:
     """
@@ -46,12 +59,15 @@ def logger_setup(log_file=None, config_path="logging_config.yaml") -> None:
 
     logging.captureWarnings(True)
     log_tmp_file = log_file
-    if log_file is None:  # create tmp file
-        log_tmp_file = _create_tmp_log_file()
-    _create_log_file(log_tmp_file)
+    if log_file is None:  #logs flush to console
+        _configure_logging_with_logfile(None, config_path)
+    elif log_file in ("home", "temp"):
+        log_tmp_file=_create_tmp_log_file(log_file)
+    else:
+        _create_log_file(log_file)
     _configure_logging_with_logfile(log_tmp_file, config_path)
     sys.excepthook = gandlf_excepthook
-    logging.info(f"The logs are saved in {log_tmp_file}")
+    log_messages(log_tmp_file)
 
 
 class InfoOnlyFilter(logging.Filter):
