@@ -69,5 +69,5 @@ class Parameters(BaseModel):
     clip_mode: Union[str, None]
     inference_mechanism: dict
     data_postprocessing_after_reverse_one_hot_encoding: dict
-    enable_padding: Optional[dict, bool] = None
+    enable_padding: Optional[Union[dict, bool]] = None
     headers: Optional[dict] = None
