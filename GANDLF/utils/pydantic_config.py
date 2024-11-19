@@ -25,9 +25,6 @@ class Model(BaseModel):
     save_at_every_epoch: bool
 
 
-class Scheduler(BaseModel):
-    type: str
-    step_size: float
 
 
 class Parameters(BaseModel):
@@ -35,7 +32,7 @@ class Parameters(BaseModel):
     version: Version
     model: Model
     modality: str
-    scheduler: Union[Scheduler, str]
+    scheduler: dict
     learning_rate: float
     weighted_loss: bool
     verbose: bool
@@ -74,4 +71,5 @@ class Parameters(BaseModel):
     clip_mode: Union[str, None]
     inference_mechanism: dict
     data_postprocessing_after_reverse_one_hot_encoding: dict
-    enable_padding: bool
+    enable_padding: Union[dict,bool]
+    headers: Optional[dict] = None
