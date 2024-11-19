@@ -25,8 +25,6 @@ class Model(BaseModel):
     save_at_every_epoch: bool
 
 
-
-
 class Parameters(BaseModel):
     model_config = ConfigDict(extra="forbid")
     version: Version
@@ -71,5 +69,5 @@ class Parameters(BaseModel):
     clip_mode: Union[str, None]
     inference_mechanism: dict
     data_postprocessing_after_reverse_one_hot_encoding: dict
-    enable_padding: Union[dict,bool]
+    enable_padding: Optional[dict, bool] = None
     headers: Optional[dict] = None
