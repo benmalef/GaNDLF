@@ -73,4 +73,4 @@ class Parameters(BaseModel):
     enable_padding: Optional[Union[dict, bool]] = None
     headers: Optional[dict] = None
     output_dir: Optional[str] = ""
-    problem_type: Optional[str] = ""
+    problem_type: Optional[str] = None

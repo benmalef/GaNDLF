@@ -27,7 +27,7 @@ def split_data(
 
     parameters = (
         populate_header_in_parameters(parameters, parameters["headers"])
-        if "problem_type" not in parameters
+        if parameters["problem_type"] is None
         else parameters
     )
 
