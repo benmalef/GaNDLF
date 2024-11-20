@@ -71,6 +71,6 @@ class Parameters(BaseModel):
     inference_mechanism: dict
     data_postprocessing_after_reverse_one_hot_encoding: dict
     enable_padding: Optional[Union[dict, bool]] = None
-    headers: Optional[dict] = None
-    output_dir: Optional[str] = None
-    problem_type: Optional[str] = None
+    headers: Optional[dict] = {}
+    output_dir: Optional[str] = ""
+    problem_type: Optional[str] = ""
