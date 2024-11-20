@@ -750,7 +750,7 @@ def ConfigManager(
     try:
         parameters = Parameters(
             **_parseConfig(config_file_path, version_check_flag)
-        ).dict()
+        ).model_dump(by_alias=True)
         return parameters
     except Exception as e:
         ## todo: ensure logging captures assertion errors
