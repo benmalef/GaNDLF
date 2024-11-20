@@ -16,7 +16,7 @@ class Model(BaseModel):
     architecture: str
     norm_type: str
     final_layer: str
-    class_list: list[Union[int,str]]
+    class_list: list[Union[int, str]]
     ignore_label_validation: Union[int, None]
     amp: bool
     print_summary: bool
@@ -73,4 +73,4 @@ class Parameters(BaseModel):
     enable_padding: Optional[Union[dict, bool]] = None
     headers: Optional[dict] = None
     output_dir: Optional[str] = None
-    problem_type:Optional[str] = None
+    problem_type: Optional[str] = None
