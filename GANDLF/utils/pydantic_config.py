@@ -1,5 +1,5 @@
 from pydantic import BaseModel, ConfigDict
-from typing import Dict, Any, List, Optional
+from typing import Dict, Any, List, Optional, Field
 from enum import Enum
 from GANDLF.models.modelBase import ModelBase
 from typing import Union
