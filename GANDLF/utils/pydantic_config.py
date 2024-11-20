@@ -75,4 +75,3 @@ class Parameters(BaseModel):
     output_dir: Optional[str] = ""
     problem_type: Optional[str] = None
     differential_privacy: Optional[dict] = {}
-
