@@ -16,14 +16,13 @@ class Model(BaseModel):
     architecture: str
     norm_type: str
     final_layer: str
-    class_list: list[Union[int, str]]
+    class_list: list[Union[int,str]]
     ignore_label_validation: Union[int, None]
     amp: bool
     print_summary: bool
     type: str
     data_type: str
     save_at_every_epoch: bool
-    num_channels: Optional[int] = None
 
 
 class Parameters(BaseModel):
@@ -71,6 +70,6 @@ class Parameters(BaseModel):
     inference_mechanism: dict
     data_postprocessing_after_reverse_one_hot_encoding: dict
     enable_padding: Optional[Union[dict, bool]] = None
-    headers: Optional[dict] = {}
+    headers: Optional[dict] = None
     output_dir: Optional[str] = ""
     problem_type: Optional[str] = ""
