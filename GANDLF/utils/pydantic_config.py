@@ -64,7 +64,7 @@ class Parameters(BaseModel):
     loss_function: Union[str, Dict]
     data_augmentation: dict  # TODO: maybe is better to create a class
     nested_training: dict  # TODO: maybe is better to create a class
-    optimizer: Union[dict, str] = Field(..., validation_alias="opt")
+    optimizer: Union[dict, str] = Field(alias="opt")
     patch_sampler: Union[dict, str]
     patch_size: Union[List[int], int]
     clip_mode: Union[str, None]
@@ -75,3 +75,7 @@ class Parameters(BaseModel):
     output_dir: Optional[str] = ""
     problem_type: Optional[str] = None
     differential_privacy: Optional[dict] = {}
+
+    @property
+    def opt(self):
+        return self.optimizer
