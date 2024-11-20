@@ -23,7 +23,7 @@ class Model(BaseModel):
     type: str
     data_type: str
     save_at_every_epoch: bool
-    num_channels: Union[int, None]
+    num_channels: Optional[int] = None
 
 
 class Parameters(BaseModel):
