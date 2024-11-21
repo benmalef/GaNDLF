@@ -654,6 +654,7 @@ def _parseConfig(
     if "opt" in params:
         print("DeprecationWarning: 'opt' has been superseded by 'optimizer'")
         params["optimizer"] = params["opt"]
+        params.pop("opt")
 
     # initialize defaults for patch sampler
     temp_patch_sampler_dict = {
