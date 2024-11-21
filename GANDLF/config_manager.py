@@ -651,7 +651,7 @@ def _parseConfig(
         parallel_compute_command = parallel_compute_command.replace('"', "")
     params["parallel_compute_command"] = parallel_compute_command
 
-    if "opt" is not None:
+    if paremeters["opt"] is not None:
         print("DeprecationWarning: 'opt' has been superseded by 'optimizer'")
         params["optimizer"] = params["opt"]
 
