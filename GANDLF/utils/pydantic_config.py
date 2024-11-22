@@ -74,5 +74,5 @@ class Parameters(BaseModel):
     headers: Optional[dict] = None
     output_dir: Optional[str] = ""
     problem_type: Optional[str] = None
-    differential_privacy: Optional[dict] = {}
+    differential_privacy: Optional[dict] = None
     # opt: Optional[Union[dict, str]] = {}  # TODO find a better way
