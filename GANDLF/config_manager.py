@@ -128,6 +128,8 @@ def _parseConfig(
     if not isinstance(config_file_path, dict):
         params = yaml.safe_load(open(config_file_path, "r"))
 
+    params = Parameters(**params).model_dump()
+
     if version_check_flag:  # this is only to be used for testing
         assert (
             "version" in params
