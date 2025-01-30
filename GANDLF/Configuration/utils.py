@@ -4,6 +4,7 @@ from pydantic import BaseModel
 from typing import Type
 from pydantic import BaseModel
 
+
 def generate_and_save_markdown(model: Type[BaseModel], file_path: str) -> None:
     schema = model.schema()
     markdown = []
@@ -18,7 +19,9 @@ def generate_and_save_markdown(model: Type[BaseModel], file_path: str) -> None:
     # Add fields table
     markdown.append("## Parameters\n")
     markdown.append("| Field | Type | Description | Default |")
-    markdown.append("|----------------|----------------|-----------------------|------------------|")
+    markdown.append(
+        "|----------------|----------------|-----------------------|------------------|"
+    )
 
     for field_name, field_info in schema["properties"].items():
         # Extract field details
@@ -27,7 +30,9 @@ def generate_and_save_markdown(model: Type[BaseModel], file_path: str) -> None:
         default = field_info.get("default", "N/A")
 
         # Add row to the table
-        markdown.append(f"| `{field_name}` | `{field_type}` | {description} | `{default}` |")
+        markdown.append(
+            f"| `{field_name}` | `{field_type}` | {description} | `{default}` |"
+        )
 
     # Write to file
     with open(file_path, "w", encoding="utf-8") as file:
