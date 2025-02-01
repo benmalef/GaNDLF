@@ -87,8 +87,8 @@ requirements = [
     "openslide-bin",
     "openslide-python==1.4.1",
     "lion-pytorch==0.2.2",
-    "pydantic"
-    ]
+    "pydantic",
+]
 
 if __name__ == "__main__":
     setup(

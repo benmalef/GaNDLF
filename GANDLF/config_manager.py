@@ -734,7 +734,6 @@ def _parseConfig(
     # if initialize_inference_mechanism:
     #     params["inference_mechanism"] = inference_mechanism
 
-
     return params
 
 
@@ -767,5 +766,3 @@ def ConfigManager(
     #     # raise
     except ValidationError as exc:
         print(exc.errors())
-
-
