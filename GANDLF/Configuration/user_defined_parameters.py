@@ -2,10 +2,6 @@ from pydantic import BaseModel,field_validator
 from GANDLF.config_manager import  version_check
 from importlib.metadata import version
 
-#TODO: Define the paramaters from the config_manager
-
-#TODO: Some parameters maybe can define as a seperated Model
-
 class Version(BaseModel):
     minimum: str
     maximum: str
