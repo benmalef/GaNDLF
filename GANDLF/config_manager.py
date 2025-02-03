@@ -149,7 +149,7 @@ def _parseConfig(
     #         for _ in range(params["model"]["dimension"]):
     #             actual_patch_size.append(params["patch_size"][0])
     #         params["patch_size"] = actual_patch_size
-    #
+    # #
     #     # parse patch size as needed for computations
     #     if len(params["patch_size"]) == 2:  # 2d check
     #         # ensuring same size during torchio processing
