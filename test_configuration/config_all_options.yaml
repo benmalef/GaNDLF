@@ -1,14 +1,11 @@
 # affix version
-version1:
+version:
   {
     minimum: 0.1.3-dev,
     maximum: 0.1.3-dev # this should NOT be made a variable, but should be tested after every tag is created
   }
-vere2:
-  {
-    minimum: 0.1.3-dev,
-    maximum: 0.1.3-dev # this should NOT be made a variable, but should be tested after every tag is created
-  }
+weighted_loss: True
+patch_size: 1
 ## Choose the model parameters here
 #model:
 #  {
