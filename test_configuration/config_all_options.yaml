@@ -6,6 +6,7 @@ version:
   }
 weighted_loss: True
 patch_size: [1,2,3]
+modality: ""
 model:
   {
 

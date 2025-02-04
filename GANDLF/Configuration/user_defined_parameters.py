@@ -2,7 +2,7 @@ from typing import Union
 from pydantic import BaseModel, model_validator, Field, field_validator
 from GANDLF.config_manager import version_check
 from importlib.metadata import version
-from typing_extensions import Self
+from typing_extensions import Self, Literal
 
 
 class Version(BaseModel):
@@ -28,6 +28,7 @@ class UserDefinedParameters(BaseModel):
         ..., description="Patch size."
     )
     model: Model = Field(..., description="Model.")
+    modality: Literal["rad","histo","path"] = Field(..., description="Modality.")
 
     # Validators
     @model_validator(mode="after")
