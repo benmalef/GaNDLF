@@ -29,6 +29,7 @@ class UserDefinedParameters(BaseModel):
     )
     model: Model = Field(..., description="Model.")
     modality: Literal["rad","histo","path"] = Field(..., description="Modality.")
+    loss_function: Union[dict,str] = Field(..., description="Loss function.")
 
     # Validators
     @model_validator(mode="after")
@@ -49,5 +50,28 @@ class UserDefinedParameters(BaseModel):
         elif len(self.patch_size) == 3:  # 2d check
             if self.model.dimension is None:
                 self.model.dimension = 3
+        #Loss_function
+        if isinstance(self.loss_function, dict):  # if this is a dict
+            if len(self.loss_function) > 0:  # only proceed if something is defined
+                for key in self.loss_function:  # iterate through all keys
+                    if key == "mse":
+                        if (self.loss_function[key] is None) or not (
+                                "reduction" in self.loss_function[key]
+                        ):
+                            self.loss_function[key] = {}
+                            self.loss_function[key]["reduction"] = "mean"
+                    else:
+                        # use simple string for other functions - can be extended with parameters, if needed
+                        self.loss_function = key
+        else:
+            if self.loss_function == "focal":
+                self.loss_function = {"focal": {}}
+                self.loss_function["focal"]["gamma"] = 2.0
+                self.loss_function["focal"]["size_average"] = True
+            elif self.loss_function == "mse":
+                self.loss_function = {"mse": {}}
+                self.loss_function["mse"]["reduction"] = "mean"
+
+
 
         return self
