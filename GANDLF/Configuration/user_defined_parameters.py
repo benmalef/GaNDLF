@@ -9,8 +9,9 @@ from pydantic import (
 )
 from GANDLF.config_manager import version_check
 from importlib.metadata import version
-from typing_extensions import Self, Literal, Annotated
+from typing_extensions import Self, Literal, Annotated, Optional
 from GANDLF.Configuration.validators import *
+from GANDLF.Configuration.model_parameters import Model
 
 
 class Version(BaseModel):
@@ -23,9 +24,6 @@ class Version(BaseModel):
             return self
 
 
-class Model(BaseModel):
-    dimension: Union[int, None] = Field(description="Dimension.", default=None)
-
 
 class UserDefinedParameters(BaseModel):
     version: Version = Field(
@@ -35,7 +33,7 @@ class UserDefinedParameters(BaseModel):
     patch_size: Union[list[Union[int, float]], int, float] = Field(
         description="Patch size."
     )
-    model: Model = Field(description="Model.")
+    model: Annotated[Model,Field(description="Model.")]
     modality: Literal["rad", "histo", "path"] = Field(description="Modality.")
     loss_function: Annotated[
         Union[dict, str],

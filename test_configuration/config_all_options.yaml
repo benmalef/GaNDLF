@@ -10,8 +10,17 @@ modality: "histo"
 loss_function: "mse"
 model:
   {
-    dimension: 3
-  }
+    dimension: 3, # the dimension of the model and dataset: defines dimensionality of computations
+    base_filters: 30, # Set base filters: number of filters present in the initial module of the U-Net convolution; for IncU-Net, keep this divisible by 4
+    architecture: resunet, # options: unet, resunet, deep_resunet, deep_unet, light_resunet, light_unet, fcn, uinc, vgg, densenet
+    norm_type: batch, # options: batch, instance, or none (only for VGG); used for all networks
+    final_layer: softmax, # can be either sigmoid, softmax or none (none == regression/logits)
+    # sigmoid_input_multiplier: 1.0, # this is used during sigmoid, and defaults to 1.0
+    class_list: [0,1,2,4], # Set the list of labels the model should train on and predict
+    # class_list: '[*range(0,100,1)]' # a range of values from 0 to 99 with a step of 1 will be created; customize as needed, but ensure this is defined as a string as it will be passed through 'eval' function
+    # class_list: '[0,1||2||3,1||4,4]', # combinatorial training - this will construct one-hot encoded mask using logical operands between specified annotations. Note that double '|' or '&' should be passed and not single to avoid python parsing
+    ignore_label_validation: 0, # this is the location of the class_list whose performance is ignored during validation metric calculation
+}
 metrics:
     - "dice"
     - "classification"

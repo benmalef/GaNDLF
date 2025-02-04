@@ -1,4 +1,3 @@
-
 from GANDLF.Configuration.utils import initialize_key
 from GANDLF.metrics import surface_distance_ids
 
@@ -116,3 +115,4 @@ def validate_patch(self):
             self.model.dimension = 3
 
     return self
+
