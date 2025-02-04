@@ -1,4 +1,4 @@
-from typing import Type
+from typing import Type, Optional, Union
 from pydantic import BaseModel
 
 from typing import Type
@@ -37,3 +37,31 @@ def generate_and_save_markdown(model: Type[BaseModel], file_path: str) -> None:
     # Write to file
     with open(file_path, "w", encoding="utf-8") as file:
         file.write("\n".join(markdown))
+
+
+def initialize_key(
+    parameters: dict, key: str, value: Optional[Union[str, float, list, dict]] = None
+) -> dict:
+    """
+    This function initializes a key in the parameters dictionary to a value if it is absent.
+
+    Args:
+        parameters (dict): The parameter dictionary.
+        key (str): The key to initialize.
+        value (Optional[Union[str, float, list, dict]], optional): The value to initialize. Defaults to None.
+
+    Returns:
+        dict: The parameter dictionary.
+    """
+    if parameters is None:
+        parameters = {}
+    if key in parameters:
+        if parameters[key] is not None:
+            if isinstance(parameters[key], dict):
+                # if key is present but not defined
+                if len(parameters[key]) == 0:
+                    parameters[key] = value
+    else:
+        parameters[key] = value  # if key is absent
+
+    return parameters

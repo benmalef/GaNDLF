@@ -131,35 +131,6 @@ def _parseConfig(
     if not isinstance(config_file_path, dict):
         params = yaml.safe_load(open(config_file_path, "r"))
 
-    # if version_check_flag:  # this is only to be used for testing
-    #     assert (
-    #         "version" in params
-    #     ), "The 'version' key needs to be defined in config with 'minimum' and 'maximum' fields to determine the compatibility of configuration with code base"
-    #     version_check(params["version"], version_to_check=version("GANDLF"))
-
-    # if "patch_size" in params:
-    #     # duplicate patch size if it is an int or float
-    #     if isinstance(params["patch_size"], int) or isinstance(
-    #         params["patch_size"], float
-    #     ):
-    #         params["patch_size"] = [params["patch_size"]]
-    #     # in case someone decides to pass a single value list
-    #     if len(params["patch_size"]) == 1:
-    #         actual_patch_size = []
-    #         for _ in range(params["model"]["dimension"]):
-    #             actual_patch_size.append(params["patch_size"][0])
-    #         params["patch_size"] = actual_patch_size
-    # #
-    #     # parse patch size as needed for computations
-    #     if len(params["patch_size"]) == 2:  # 2d check
-    #         # ensuring same size during torchio processing
-    #         params["patch_size"].append(1)
-    #         if "dimension" not in params["model"]:
-    #             params["model"]["dimension"] = 2
-    #     elif len(params["patch_size"]) == 3:  # 2d check
-    #         if "dimension" not in params["model"]:
-    #             params["model"]["dimension"] = 3
-    # assert "patch_size" in params, "Patch size needs to be defined in the config file"
     #
     # if "resize" in params:
     #     print(
@@ -167,282 +138,179 @@ def _parseConfig(
     #         file=sys.stderr,
     #     )
     #
-    # assert "modality" in params, "'modality' needs to be defined in the config file"
-    # params["modality"] = params["modality"].lower()
-    # assert params["modality"] in [
-    #     "rad",
-    #     "histo",
-    #     "path",
-    # ], "Modality should be either 'rad' or 'path'"
-    #
-    # assert (
-    #     "loss_function" in params
-    # ), "'loss_function' needs to be defined in the config file"
-    # if "loss_function" in params:
-    #     # check if user has passed a dict
-    #     if isinstance(params["loss_function"], dict):  # if this is a dict
-    #         if len(params["loss_function"]) > 0:  # only proceed if something is defined
-    #             for key in params["loss_function"]:  # iterate through all keys
-    #                 if key == "mse":
-    #                     if (params["loss_function"][key] is None) or not (
-    #                         "reduction" in params["loss_function"][key]
-    #                     ):
-    #                         params["loss_function"][key] = {}
-    #                         params["loss_function"][key]["reduction"] = "mean"
-    #                 else:
-    #                     # use simple string for other functions - can be extended with parameters, if needed
-    #                     params["loss_function"] = key
-    #     else:
-    #         # check if user has passed a single string
-    #         if params["loss_function"] == "mse":
-    #             params["loss_function"] = {}
-    #             params["loss_function"]["mse"] = {}
-    #             params["loss_function"]["mse"]["reduction"] = "mean"
-    #         elif params["loss_function"] == "focal":
-    #             params["loss_function"] = {}
-    #             params["loss_function"]["focal"] = {}
-    #             params["loss_function"]["focal"]["gamma"] = 2.0
-    #             params["loss_function"]["focal"]["size_average"] = True
-    #
-    # assert "metrics" in params, "'metrics' needs to be defined in the config file"
-    # if "metrics" in params:
-    #     if not isinstance(params["metrics"], dict):
-    #         temp_dict = {}
-    #     else:
-    #         temp_dict = params["metrics"]
-    #
-    #     # initialize metrics dict
-    #     for metric in params["metrics"]:
-    #         # assigning a new variable because some metrics can be dicts, and we want to get the first key
-    #         comparison_string = metric
-    #         if isinstance(metric, dict):
-    #             comparison_string = list(metric.keys())[0]
-    #         # these metrics always need to be dicts
-    #         if comparison_string in [
-    #             "accuracy",
-    #             "f1",
-    #             "precision",
-    #             "recall",
-    #             "specificity",
-    #             "iou",
-    #         ]:
-    #             if not isinstance(metric, dict):
-    #                 temp_dict[metric] = {}
-    #             else:
-    #                 temp_dict[comparison_string] = metric
-    #         elif not isinstance(metric, dict):
-    #             temp_dict[metric] = None
-    #
-    #         # special case for accuracy, precision, recall, and specificity; which could be dicts
-    #         ## need to find a better way to do this
-    #         if any(
-    #             _ in comparison_string
-    #             for _ in ["precision", "recall", "specificity", "accuracy", "f1"]
-    #         ):
-    #             if comparison_string != "classification_accuracy":
-    #                 temp_dict[comparison_string] = initialize_key(
-    #                     temp_dict[comparison_string], "average", "weighted"
-    #                 )
-    #                 temp_dict[comparison_string] = initialize_key(
-    #                     temp_dict[comparison_string], "multi_class", True
-    #                 )
-    #                 temp_dict[comparison_string] = initialize_key(
-    #                     temp_dict[comparison_string], "mdmc_average", "samplewise"
-    #                 )
-    #                 temp_dict[comparison_string] = initialize_key(
-    #                     temp_dict[comparison_string], "threshold", 0.5
-    #                 )
-    #                 if comparison_string == "accuracy":
-    #                     temp_dict[comparison_string] = initialize_key(
-    #                         temp_dict[comparison_string], "subset_accuracy", False
-    #                     )
-    #         elif "iou" in comparison_string:
-    #             temp_dict["iou"] = initialize_key(
-    #                 temp_dict["iou"], "reduction", "elementwise_mean"
-    #             )
-    #             temp_dict["iou"] = initialize_key(temp_dict["iou"], "threshold", 0.5)
-    #         elif comparison_string in surface_distance_ids:
-    #             temp_dict[comparison_string] = initialize_key(
-    #                 temp_dict[comparison_string], "connectivity", 1
-    #             )
-    #             temp_dict[comparison_string] = initialize_key(
-    #                 temp_dict[comparison_string], "threshold", None
-    #             )
-    #
-    #     params["metrics"] = temp_dict
-    #
-    # # this is NOT a required parameter - a user should be able to train with NO augmentations
-    # params = initialize_key(params, "data_augmentation", {})
-    # # for all others, ensure probability is present
-    # params["data_augmentation"]["default_probability"] = params[
-    #     "data_augmentation"
-    # ].get("default_probability", 0.5)
-    #
-    # if not (params["data_augmentation"] is None):
-    #     if len(params["data_augmentation"]) > 0:  # only when augmentations are defined
-    #         # special case for random swapping and elastic transformations - which takes a patch size for computation
-    #         for key in ["swap", "elastic"]:
-    #             if key in params["data_augmentation"]:
-    #                 params["data_augmentation"][key] = initialize_key(
-    #                     params["data_augmentation"][key],
-    #                     "patch_size",
-    #                     np.round(np.array(params["patch_size"]) / 10)
-    #                     .astype("int")
-    #                     .tolist(),
-    #                 )
-    #
-    #         # special case for swap default initialization
-    #         if "swap" in params["data_augmentation"]:
-    #             params["data_augmentation"]["swap"] = initialize_key(
-    #                 params["data_augmentation"]["swap"], "num_iterations", 100
-    #             )
-    #
-    #         # special case for affine default initialization
-    #         if "affine" in params["data_augmentation"]:
-    #             params["data_augmentation"]["affine"] = initialize_key(
-    #                 params["data_augmentation"]["affine"], "scales", 0.1
-    #             )
-    #             params["data_augmentation"]["affine"] = initialize_key(
-    #                 params["data_augmentation"]["affine"], "degrees", 15
-    #             )
-    #             params["data_augmentation"]["affine"] = initialize_key(
-    #                 params["data_augmentation"]["affine"], "translation", 2
-    #             )
-    #
-    #         if "motion" in params["data_augmentation"]:
-    #             params["data_augmentation"]["motion"] = initialize_key(
-    #                 params["data_augmentation"]["motion"], "num_transforms", 2
-    #             )
-    #             params["data_augmentation"]["motion"] = initialize_key(
-    #                 params["data_augmentation"]["motion"], "degrees", 15
-    #             )
-    #             params["data_augmentation"]["motion"] = initialize_key(
-    #                 params["data_augmentation"]["motion"], "translation", 2
-    #             )
-    #             params["data_augmentation"]["motion"] = initialize_key(
-    #                 params["data_augmentation"]["motion"], "interpolation", "linear"
-    #             )
-    #
-    #         # special case for random blur/noise - which takes a std-dev range
-    #         for std_aug in ["blur", "noise_var"]:
-    #             if std_aug in params["data_augmentation"]:
-    #                 params["data_augmentation"][std_aug] = initialize_key(
-    #                     params["data_augmentation"][std_aug], "std", None
-    #                 )
-    #         for std_aug in ["noise"]:
-    #             if std_aug in params["data_augmentation"]:
-    #                 params["data_augmentation"][std_aug] = initialize_key(
-    #                     params["data_augmentation"][std_aug], "std", [0, 1]
-    #                 )
-    #
-    #         # special case for random noise - which takes a mean range
-    #         for mean_aug in ["noise", "noise_var"]:
-    #             if mean_aug in params["data_augmentation"]:
-    #                 params["data_augmentation"][mean_aug] = initialize_key(
-    #                     params["data_augmentation"][mean_aug], "mean", 0
-    #                 )
-    #
-    #         # special case for augmentations that need axis defined
-    #         for axis_aug in ["flip", "anisotropic", "rotate_90", "rotate_180"]:
-    #             if axis_aug in params["data_augmentation"]:
-    #                 params["data_augmentation"][axis_aug] = initialize_key(
-    #                     params["data_augmentation"][axis_aug], "axis", [0, 1, 2]
-    #                 )
-    #
-    #         # special case for colorjitter
-    #         if "colorjitter" in params["data_augmentation"]:
-    #             params["data_augmentation"] = initialize_key(
-    #                 params["data_augmentation"], "colorjitter", {}
-    #             )
-    #             for key in ["brightness", "contrast", "saturation"]:
-    #                 params["data_augmentation"]["colorjitter"] = initialize_key(
-    #                     params["data_augmentation"]["colorjitter"], key, [0, 1]
-    #                 )
-    #             params["data_augmentation"]["colorjitter"] = initialize_key(
-    #                 params["data_augmentation"]["colorjitter"], "hue", [-0.5, 0.5]
-    #             )
-    #
-    #         # Added HED augmentation in gandlf
-    #         hed_augmentation_types = [
-    #             "hed_transform",
-    #             # "hed_transform_light",
-    #             # "hed_transform_heavy",
-    #         ]
-    #         for augmentation_type in hed_augmentation_types:
-    #             if augmentation_type in params["data_augmentation"]:
-    #                 params["data_augmentation"] = initialize_key(
-    #                     params["data_augmentation"], "hed_transform", {}
-    #                 )
-    #                 ranges = [
-    #                     "haematoxylin_bias_range",
-    #                     "eosin_bias_range",
-    #                     "dab_bias_range",
-    #                     "haematoxylin_sigma_range",
-    #                     "eosin_sigma_range",
-    #                     "dab_sigma_range",
-    #                 ]
-    #
-    #                 default_range = (
-    #                     [-0.1, 0.1]
-    #                     if augmentation_type == "hed_transform"
-    #                     else (
-    #                         [-0.03, 0.03]
-    #                         if augmentation_type == "hed_transform_light"
-    #                         else [-0.95, 0.95]
-    #                     )
-    #                 )
-    #
-    #                 for key in ranges:
-    #                     params["data_augmentation"]["hed_transform"] = initialize_key(
-    #                         params["data_augmentation"]["hed_transform"],
-    #                         key,
-    #                         default_range,
-    #                     )
-    #
-    #                 params["data_augmentation"]["hed_transform"] = initialize_key(
-    #                     params["data_augmentation"]["hed_transform"],
-    #                     "cutoff_range",
-    #                     [0, 1],
-    #                 )
-    #
-    #         # special case for anisotropic
-    #         if "anisotropic" in params["data_augmentation"]:
-    #             if not ("downsampling" in params["data_augmentation"]["anisotropic"]):
-    #                 default_downsampling = 1.5
-    #             else:
-    #                 default_downsampling = params["data_augmentation"]["anisotropic"][
-    #                     "downsampling"
-    #                 ]
-    #
-    #             initialize_downsampling = False
-    #             if isinstance(default_downsampling, list):
-    #                 if len(default_downsampling) != 2:
-    #                     initialize_downsampling = True
-    #                     print(
-    #                         "WARNING: 'anisotropic' augmentation needs to be either a single number of a list of 2 numbers: https://torchio.readthedocs.io/transforms/augmentation.html?highlight=randomswap#torchio.transforms.RandomAnisotropy.",
-    #                         file=sys.stderr,
-    #                     )
-    #                     default_downsampling = default_downsampling[0]  # only
-    #             else:
-    #                 initialize_downsampling = True
-    #
-    #             if initialize_downsampling:
-    #                 if default_downsampling < 1:
-    #                     print(
-    #                         "WARNING: 'anisotropic' augmentation needs the 'downsampling' parameter to be greater than 1, defaulting to 1.5.",
-    #                         file=sys.stderr,
-    #                     )
-    #                     # default
-    #                 params["data_augmentation"]["anisotropic"]["downsampling"] = 1.5
-    #
-    #         for key in params["data_augmentation"]:
-    #             if key != "default_probability":
-    #                 params["data_augmentation"][key] = initialize_key(
-    #                     params["data_augmentation"][key],
-    #                     "probability",
-    #                     params["data_augmentation"]["default_probability"],
-    #                 )
-    #
+
+    # this is NOT a required parameter - a user should be able to train with NO augmentations
+    params = initialize_key(params, "data_augmentation", {})
+    # for all others, ensure probability is present
+    params["data_augmentation"]["default_probability"] = params[
+        "data_augmentation"
+    ].get("default_probability", 0.5)
+
+    if not (params["data_augmentation"] is None):
+        if len(params["data_augmentation"]) > 0:  # only when augmentations are defined
+            # special case for random swapping and elastic transformations - which takes a patch size for computation
+            for key in ["swap", "elastic"]:
+                if key in params["data_augmentation"]:
+                    params["data_augmentation"][key] = initialize_key(
+                        params["data_augmentation"][key],
+                        "patch_size",
+                        np.round(np.array(params["patch_size"]) / 10)
+                        .astype("int")
+                        .tolist(),
+                    )
+
+            # special case for swap default initialization
+            if "swap" in params["data_augmentation"]:
+                params["data_augmentation"]["swap"] = initialize_key(
+                    params["data_augmentation"]["swap"], "num_iterations", 100
+                )
+
+            # special case for affine default initialization
+            if "affine" in params["data_augmentation"]:
+                params["data_augmentation"]["affine"] = initialize_key(
+                    params["data_augmentation"]["affine"], "scales", 0.1
+                )
+                params["data_augmentation"]["affine"] = initialize_key(
+                    params["data_augmentation"]["affine"], "degrees", 15
+                )
+                params["data_augmentation"]["affine"] = initialize_key(
+                    params["data_augmentation"]["affine"], "translation", 2
+                )
+
+            if "motion" in params["data_augmentation"]:
+                params["data_augmentation"]["motion"] = initialize_key(
+                    params["data_augmentation"]["motion"], "num_transforms", 2
+                )
+                params["data_augmentation"]["motion"] = initialize_key(
+                    params["data_augmentation"]["motion"], "degrees", 15
+                )
+                params["data_augmentation"]["motion"] = initialize_key(
+                    params["data_augmentation"]["motion"], "translation", 2
+                )
+                params["data_augmentation"]["motion"] = initialize_key(
+                    params["data_augmentation"]["motion"], "interpolation", "linear"
+                )
+
+            # special case for random blur/noise - which takes a std-dev range
+            for std_aug in ["blur", "noise_var"]:
+                if std_aug in params["data_augmentation"]:
+                    params["data_augmentation"][std_aug] = initialize_key(
+                        params["data_augmentation"][std_aug], "std", None
+                    )
+            for std_aug in ["noise"]:
+                if std_aug in params["data_augmentation"]:
+                    params["data_augmentation"][std_aug] = initialize_key(
+                        params["data_augmentation"][std_aug], "std", [0, 1]
+                    )
+
+            # special case for random noise - which takes a mean range
+            for mean_aug in ["noise", "noise_var"]:
+                if mean_aug in params["data_augmentation"]:
+                    params["data_augmentation"][mean_aug] = initialize_key(
+                        params["data_augmentation"][mean_aug], "mean", 0
+                    )
+
+            # special case for augmentations that need axis defined
+            for axis_aug in ["flip", "anisotropic", "rotate_90", "rotate_180"]:
+                if axis_aug in params["data_augmentation"]:
+                    params["data_augmentation"][axis_aug] = initialize_key(
+                        params["data_augmentation"][axis_aug], "axis", [0, 1, 2]
+                    )
+
+            # special case for colorjitter
+            if "colorjitter" in params["data_augmentation"]:
+                params["data_augmentation"] = initialize_key(
+                    params["data_augmentation"], "colorjitter", {}
+                )
+                for key in ["brightness", "contrast", "saturation"]:
+                    params["data_augmentation"]["colorjitter"] = initialize_key(
+                        params["data_augmentation"]["colorjitter"], key, [0, 1]
+                    )
+                params["data_augmentation"]["colorjitter"] = initialize_key(
+                    params["data_augmentation"]["colorjitter"], "hue", [-0.5, 0.5]
+                )
+
+            # Added HED augmentation in gandlf
+            hed_augmentation_types = [
+                "hed_transform",
+                # "hed_transform_light",
+                # "hed_transform_heavy",
+            ]
+            for augmentation_type in hed_augmentation_types:
+                if augmentation_type in params["data_augmentation"]:
+                    params["data_augmentation"] = initialize_key(
+                        params["data_augmentation"], "hed_transform", {}
+                    )
+                    ranges = [
+                        "haematoxylin_bias_range",
+                        "eosin_bias_range",
+                        "dab_bias_range",
+                        "haematoxylin_sigma_range",
+                        "eosin_sigma_range",
+                        "dab_sigma_range",
+                    ]
+
+                    default_range = (
+                        [-0.1, 0.1]
+                        if augmentation_type == "hed_transform"
+                        else (
+                            [-0.03, 0.03]
+                            if augmentation_type == "hed_transform_light"
+                            else [-0.95, 0.95]
+                        )
+                    )
+
+                    for key in ranges:
+                        params["data_augmentation"]["hed_transform"] = initialize_key(
+                            params["data_augmentation"]["hed_transform"],
+                            key,
+                            default_range,
+                        )
+
+                    params["data_augmentation"]["hed_transform"] = initialize_key(
+                        params["data_augmentation"]["hed_transform"],
+                        "cutoff_range",
+                        [0, 1],
+                    )
+
+            # special case for anisotropic
+            if "anisotropic" in params["data_augmentation"]:
+                if not ("downsampling" in params["data_augmentation"]["anisotropic"]):
+                    default_downsampling = 1.5
+                else:
+                    default_downsampling = params["data_augmentation"]["anisotropic"][
+                        "downsampling"
+                    ]
+
+                initialize_downsampling = False
+                if isinstance(default_downsampling, list):
+                    if len(default_downsampling) != 2:
+                        initialize_downsampling = True
+                        print(
+                            "WARNING: 'anisotropic' augmentation needs to be either a single number of a list of 2 numbers: https://torchio.readthedocs.io/transforms/augmentation.html?highlight=randomswap#torchio.transforms.RandomAnisotropy.",
+                            file=sys.stderr,
+                        )
+                        default_downsampling = default_downsampling[0]  # only
+                else:
+                    initialize_downsampling = True
+
+                if initialize_downsampling:
+                    if default_downsampling < 1:
+                        print(
+                            "WARNING: 'anisotropic' augmentation needs the 'downsampling' parameter to be greater than 1, defaulting to 1.5.",
+                            file=sys.stderr,
+                        )
+                        # default
+                    params["data_augmentation"]["anisotropic"]["downsampling"] = 1.5
+
+            for key in params["data_augmentation"]:
+                if key != "default_probability":
+                    params["data_augmentation"][key] = initialize_key(
+                        params["data_augmentation"][key],
+                        "probability",
+                        params["data_augmentation"]["default_probability"],
+                    )
+
     # # this is NOT a required parameter - a user should be able to train with NO built-in pre-processing
     # params = initialize_key(params, "data_preprocessing", {})
     # if not (params["data_preprocessing"] is None):
@@ -532,81 +400,81 @@ def _parseConfig(
     #             "data_postprocessing"
     #         ][key]
     #         params["data_postprocessing"].pop(key)
-    #
-    # if "model" in params:
-    #     assert isinstance(
-    #         params["model"], dict
-    #     ), "The 'model' parameter needs to be populated as a dictionary"
-    #     assert (
-    #         len(params["model"]) > 0
-    #     ), "The 'model' parameter needs to be populated as a dictionary and should have all properties present"
-    #     assert (
-    #         "architecture" in params["model"]
-    #     ), "The 'model' parameter needs 'architecture' to be defined"
-    #     assert (
-    #         "final_layer" in params["model"]
-    #     ), "The 'model' parameter needs 'final_layer' to be defined"
-    #     assert (
-    #         "dimension" in params["model"]
-    #     ), "The 'model' parameter needs 'dimension' to be defined"
-    #
-    #     if "amp" in params["model"]:
-    #         pass
-    #     else:
-    #         print("NOT using Mixed Precision Training")
-    #         params["model"]["amp"] = False
-    #
-    #     if "norm_type" in params["model"]:
-    #         if (
-    #             params["model"]["norm_type"] == None
-    #             or params["model"]["norm_type"].lower() == "none"
-    #         ):
-    #             if not ("vgg" in params["model"]["architecture"]):
-    #                 raise ValueError(
-    #                     "Normalization type cannot be 'None' for non-VGG architectures"
-    #                 )
-    #     else:
-    #         print("WARNING: Initializing 'norm_type' as 'batch'", flush=True)
-    #         params["model"]["norm_type"] = "batch"
-    #
-    #     if not ("base_filters" in params["model"]):
-    #         base_filters = 32
-    #         params["model"]["base_filters"] = base_filters
-    #         print("Using default 'base_filters' in 'model': ", base_filters)
-    #     if not ("class_list" in params["model"]):
-    #         params["model"]["class_list"] = []  # ensure that this is initialized
-    #     if not ("ignore_label_validation" in params["model"]):
-    #         params["model"]["ignore_label_validation"] = None
-    #     if "batch_norm" in params["model"]:
-    #         print(
-    #             "WARNING: 'batch_norm' is no longer supported, please use 'norm_type' in 'model' instead",
-    #             flush=True,
-    #         )
-    #     params["model"]["print_summary"] = params["model"].get("print_summary", True)
-    #
-    #     channel_keys_to_check = ["n_channels", "channels", "model_channels"]
-    #     for key in channel_keys_to_check:
-    #         if key in params["model"]:
-    #             params["model"]["num_channels"] = params["model"][key]
-    #             break
-    #
-    #     # initialize model type for processing: if not defined, default to torch
-    #     if not ("type" in params["model"]):
-    #         params["model"]["type"] = "torch"
-    #
-    #     # initialize openvino model data type for processing: if not defined, default to FP32
-    #     if not ("data_type" in params["model"]):
-    #         params["model"]["data_type"] = "FP32"
-    #
-    #     # set default save strategy for model
-    #     if not ("save_at_every_epoch" in params["model"]):
-    #         params["model"]["save_at_every_epoch"] = False
-    #
-    #     if params["model"]["save_at_every_epoch"]:
-    #         print(
-    #             "WARNING: 'save_at_every_epoch' will result in TREMENDOUS storage usage; use at your own risk."
-    #         )
-    #
+    #    if "model" in params:
+        assert isinstance(
+            params["model"], dict
+        ), "The 'model' parameter needs to be populated as a dictionary"
+        assert (
+            len(params["model"]) > 0
+        ), "The 'model' parameter needs to be populated as a dictionary and should have all properties present"
+        assert (
+            "architecture" in params["model"]
+        ), "The 'model' parameter needs 'architecture' to be defined"
+        assert (
+            "final_layer" in params["model"]
+        ), "The 'model' parameter needs 'final_layer' to be defined"
+        assert (
+            "dimension" in params["model"]
+        ), "The 'model' parameter needs 'dimension' to be defined"
+
+        if "amp" in params["model"]:
+            pass
+        else:
+            print("NOT using Mixed Precision Training")
+            params["model"]["amp"] = False
+
+        if "norm_type" in params["model"]:
+            if (
+                params["model"]["norm_type"] == None
+                or params["model"]["norm_type"].lower() == "none"
+            ):
+                if not ("vgg" in params["model"]["architecture"]):
+                    raise ValueError(
+                        "Normalization type cannot be 'None' for non-VGG architectures"
+                    )
+        else:
+            print("WARNING: Initializing 'norm_type' as 'batch'", flush=True)
+            params["model"]["norm_type"] = "batch"
+
+        if not ("base_filters" in params["model"]):
+            base_filters = 32
+            params["model"]["base_filters"] = base_filters
+            print("Using default 'base_filters' in 'model': ", base_filters)
+        if not ("class_list" in params["model"]):
+            params["model"]["class_list"] = []  # ensure that this is initialized
+        if not ("ignore_label_validation" in params["model"]):
+            params["model"]["ignore_label_validation"] = None
+        if "batch_norm" in params["model"]:
+            print(
+                "WARNING: 'batch_norm' is no longer supported, please use 'norm_type' in 'model' instead",
+                flush=True,
+            )
+        params["model"]["print_summary"] = params["model"].get("print_summary", True)
+
+        channel_keys_to_check = ["n_channels", "channels", "model_channels"]
+        for key in channel_keys_to_check:
+            if key in params["model"]:
+                params["model"]["num_channels"] = params["model"][key]
+                break
+
+        # initialize model type for processing: if not defined, default to torch
+        if not ("type" in params["model"]):
+            params["model"]["type"] = "torch"
+
+        # initialize openvino model data type for processing: if not defined, default to FP32
+        if not ("data_type" in params["model"]):
+            params["model"]["data_type"] = "FP32"
+
+        # set default save strategy for model
+        if not ("save_at_every_epoch" in params["model"]):
+            params["model"]["save_at_every_epoch"] = False
+
+        if params["model"]["save_at_every_epoch"]:
+            print(
+                "WARNING: 'save_at_every_epoch' will result in TREMENDOUS storage usage; use at your own risk."
+            )
+
+
     # if isinstance(params["model"]["class_list"], str):
     #     if ("||" in params["model"]["class_list"]) or (
     #         "&&" in params["model"]["class_list"]

@@ -5,12 +5,18 @@ version:
     maximum: 0.1.3-dev # this should NOT be made a variable, but should be tested after every tag is created
   }
 weighted_loss: True
-patch_size: [1,2,3]
-modality: ""
+patch_size: [1]
+modality: "histo"
+loss_function: "mse"
 model:
   {
-
+    dimension: 3
   }
+metrics:
+    - "dice"
+    - "classification"
+    - "accuracy"
+    - "iou"
 ## Choose the model parameters here
 #model:
 #  {
