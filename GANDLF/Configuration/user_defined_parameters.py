@@ -33,7 +33,7 @@ class UserDefinedParameters(BaseModel):
     patch_size: Union[list[Union[int, float]], int, float] = Field(
         description="Patch size."
     )
-    model: Annotated[Model,Field(description="Model.")]
+    model: Model = Field(...,description="The model to use. ")
     modality: Literal["rad", "histo", "path"] = Field(description="Modality.")
     loss_function: Annotated[
         Union[dict, str],
@@ -49,4 +49,5 @@ class UserDefinedParameters(BaseModel):
     # Validators
     @model_validator(mode="after")
     def validate(self) -> Self:
-        return validate_patch(self) # check if it is the right approach
+        validate_patch_size(self)
+        return self

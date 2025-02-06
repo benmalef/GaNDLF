@@ -1,3 +1,7 @@
+import traceback
+
+from typing_extensions import Self
+
 from GANDLF.Configuration.utils import initialize_key
 from GANDLF.metrics import surface_distance_ids
 
@@ -93,11 +97,35 @@ def validate_metrics(value) -> dict:
     return value
 
 
-def validate_an_example(value, patch) -> dict:
+def validate_class_list(value):
+    if isinstance(value, str):
+        if ("||" in value) or (
+                "&&" in value
+        ):
+            # special case for multi-class computation - this needs to be handled during one-hot encoding mask construction
+            print(
+                "WARNING: This is a special case for multi-class computation, where different labels are processed together, `reverse_one_hot` will need mapping information to work correctly"
+            )
+            temp_class_list =value
+            # we don't need the brackets
+            temp_class_list = temp_class_list.replace("[", "")
+            temp_class_list = temp_class_list.replace("]", "")
+            value = temp_class_list.split(",")
+        else:
+            try:
+                value = eval(value)
+                return value
+            except Exception as e:
+                ## todo: ensure logging captures assertion errors
+                assert (
+                    False
+                ), f"Could not evaluate the `class_list` in `model`, Exception: {str(e)}, {traceback.format_exc()}"
+                # logging.error(
+                #     f"Could not evaluate the `class_list` in `model`, Exception: {str(e)}, {traceback.format_exc()}"
+                # )
     return value
 
-
-def validate_patch(self):
+def validate_patch_size(self):
     if isinstance(self.patch_size, int) or isinstance(self.patch_size, float):
         self.patch_size = [self.patch_size]
     if len(self.patch_size) == 1 and self.model.dimension is not None:
@@ -113,6 +141,3 @@ def validate_patch(self):
     elif len(self.patch_size) == 3:  # 2d check
         if self.model.dimension is None:
             self.model.dimension = 3
-
-    return self
-
