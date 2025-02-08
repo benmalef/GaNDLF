@@ -6,7 +6,7 @@ from GANDLF.Configuration.Parameters.nested_training_parameters import NestedTra
 from GANDLF.config_manager import version_check
 from importlib.metadata import version
 from typing_extensions import Self, Literal, Annotated
-from GANDLF.Configuration.validators import *
+from GANDLF.Configuration.Parameters.validators import *
 from GANDLF.Configuration.Parameters.model_parameters import Model
 
 
