@@ -1,3 +1,5 @@
+import json
+
 from GANDLF.config_manager import ConfigManager
 from pathlib import Path
 
@@ -6,4 +8,4 @@ if __name__ == "__main__":
     parameters = ConfigManager(
         testingDir + "/config_all_options.yaml", version_check_flag=False
     )
-    print(parameters)
+    print(json.dumps(parameters,indent=4))
