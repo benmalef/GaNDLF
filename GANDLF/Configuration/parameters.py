@@ -7,5 +7,5 @@ class ParametersConfiguration(BaseModel):
     model_config = ConfigDict(extra="allow")
 
 
-class Parameters(ParametersConfiguration, DefaultParameters, UserDefinedParameters):
+class Parameters(ParametersConfiguration,UserDefinedParameters):
     pass
