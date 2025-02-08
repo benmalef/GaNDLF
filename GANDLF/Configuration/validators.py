@@ -1,5 +1,6 @@
 import traceback
 
+from GANDLF.Configuration.scheduler_parameters import Scheduler
 from GANDLF.Configuration.utils import initialize_key
 from GANDLF.metrics import surface_distance_ids
 
@@ -151,3 +152,20 @@ def validate_norm_type(norm_type, architecture):
         print("WARNING: Initializing 'norm_type' as 'batch'", flush=True)
         norm_type = "batch"
     return norm_type
+
+
+def validate_parallel_compute_command(value):
+    parallel_compute_command = value
+    parallel_compute_command = parallel_compute_command.replace(
+        "'", ""
+    )  # TODO: Check it again,should change from ' to `
+    parallel_compute_command = parallel_compute_command.replace('"', "")
+    value = parallel_compute_command
+    return value
+
+def validate_schedular(value, learning_rate):
+    if isinstance(value, str):
+        value = Scheduler(type=value)
+        if value.step_size is None:
+            value.step_size = learning_rate / 5.0
+    return value
