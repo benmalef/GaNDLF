@@ -163,9 +163,10 @@ def validate_parallel_compute_command(value):
     value = parallel_compute_command
     return value
 
+
 def validate_schedular(value, learning_rate):
     if isinstance(value, str):
         value = Scheduler(type=value)
-        if value.step_size is None:
+    if value.step_size is None:
             value.step_size = learning_rate / 5.0
     return value
