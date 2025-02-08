@@ -5,27 +5,43 @@ version:
     maximum: 0.1.3-dev # this should NOT be made a variable, but should be tested after every tag is created
   }
 weighted_loss: True
-patch_size: [1]
+patch_size: 2
 modality: "histo"
 loss_function: "mse"
 model:
   {
-    dimension: 3, # the dimension of the model and dataset: defines dimensionality of computations
-    base_filters: 30, # Set base filters: number of filters present in the initial module of the U-Net convolution; for IncU-Net, keep this divisible by 4
-    architecture: resunet, # options: unet, resunet, deep_resunet, deep_unet, light_resunet, light_unet, fcn, uinc, vgg, densenet
-    norm_type: batch, # options: batch, instance, or none (only for VGG); used for all networks
+    dimension: 2, # the dimension of the model and dataset: defines dimensionality of computations
+    # Set base filters: number of filters present in the initial module of the U-Net convolution; for IncU-Net, keep this divisible by 4
+    architecture: "vgg", # options: unet, resunet, deep_resunet, deep_unet, light_resunet, light_unet, fcn, uinc, vgg, densenet
+    norm_type: instance, # options: batch, instance, or none (only for VGG); used for all networks
     final_layer: softmax, # can be either sigmoid, softmax or none (none == regression/logits)
     # sigmoid_input_multiplier: 1.0, # this is used during sigmoid, and defaults to 1.0
-    class_list: [0,1,2,4], # Set the list of labels the model should train on and predict
-    # class_list: '[*range(0,100,1)]' # a range of values from 0 to 99 with a step of 1 will be created; customize as needed, but ensure this is defined as a string as it will be passed through 'eval' function
-    # class_list: '[0,1||2||3,1||4,4]', # combinatorial training - this will construct one-hot encoded mask using logical operands between specified annotations. Note that double '|' or '&' should be passed and not single to avoid python parsing
+#    class_list: [0,1,2,4], # Set the list of labels the model should train on and predict
+    class_list: [0,1,2], # a range of values from 0 to 99 with a step of 1 will be created; customize as needed, but ensure this is defined as a string as it will be passed through 'eval' function
+#    class_list: '[0,1||2||3,1||4,4]', # combinatorial training - this will construct one-hot encoded mask using logical operands between specified annotations. Note that double '|' or '&' should be passed and not single to avoid python parsing
     ignore_label_validation: 0, # this is the location of the class_list whose performance is ignored during validation metric calculation
+    channels : 3,
+    save_at_every_epoch: True,
+    asdasd: asdad,
+    batch_norm: "ben"
 }
+nested_training:
+  {
+    stratified: False, # this will perform stratified k-fold cross-validation but only with offline data splitting, see https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.StratifiedKFold.html
+    testing: 5, # this controls the number of testing data folds for final model evaluation; [NOT recommended] to disable this, use '1'
+    validation: 5, # this controls the number of validation data folds to be used for model *selection* during training (not used for back-propagation)
+  }
+parallel_compute_command: 'qsub - b y -l gpu -l h_vmem=32G -cwd -o ${outputDir}/\$JOB_ID.stdout -e ${outputDir}/\$JOB_ID.stderr `pwd`/sge_wrapper _correct_location_of_virtual_environment_/venv/bin/python'
 metrics:
     - "dice"
     - "classification"
     - "accuracy"
     - "iou"
+scheduler: {
+    type: triangle,
+    min_lr: 0.00001,
+    max_lr: 1,
+}
 ## Choose the model parameters here
 #model:
 #  {
@@ -82,10 +98,10 @@ metrics:
 #  # - recall # classification/segmentation ## more details https://lightning.ai/docs/torchmetrics/v1.1.2/classification/recall.html
 #  # - iou # classification/segmentation ## more details https://lightning.ai/docs/torchmetrics/v1.1.2/classification/jaccard_index.html
 ### this customizes the inference, primarily used for segmentation outputs
-#inference_mechanism: {
-#  grid_aggregator_overlap: crop, # this option provides the option to strategize the grid aggregation output; should be either 'crop' or 'average' - https://torchio.readthedocs.io/patches/patch_inference.html#grid-aggregator
-#  patch_overlap: 0, # amount of overlap of patches during inference, defaults to 0; see https://torchio.readthedocs.io/patches/patch_inference.html#gridsampler
-#}
+inference_mechanism: {
+  grid_aggregator_overlap: crop, # this option provides the option to strategize the grid aggregation output; should be either 'crop' or 'average' - https://torchio.readthedocs.io/patches/patch_inference.html#grid-aggregator
+  patch_overlap: 0, # amount of overlap of patches during inference, defaults to 0; see https://torchio.readthedocs.io/patches/patch_inference.html#gridsampler
+}
 ## this is to enable or disable lazy loading - setting to true reads all data once during data loading, resulting in improvements
 ## in I/O at the expense of memory consumption
 #in_memory: False

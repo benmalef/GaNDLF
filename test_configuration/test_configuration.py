@@ -8,4 +8,4 @@ if __name__ == "__main__":
     parameters = ConfigManager(
         testingDir + "/config_all_options.yaml", version_check_flag=False
     )
-    print(json.dumps(parameters,indent=4))
+    print(json.dumps(parameters, indent=4))
