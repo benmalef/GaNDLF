@@ -1,7 +1,5 @@
 import traceback
 
-from typing_extensions import Self
-
 from GANDLF.Configuration.utils import initialize_key
 from GANDLF.metrics import surface_distance_ids
 
@@ -99,14 +97,12 @@ def validate_metrics(value) -> dict:
 
 def validate_class_list(value):
     if isinstance(value, str):
-        if ("||" in value) or (
-                "&&" in value
-        ):
+        if ("||" in value) or ("&&" in value):
             # special case for multi-class computation - this needs to be handled during one-hot encoding mask construction
             print(
                 "WARNING: This is a special case for multi-class computation, where different labels are processed together, `reverse_one_hot` will need mapping information to work correctly"
             )
-            temp_class_list =value
+            temp_class_list = value
             # we don't need the brackets
             temp_class_list = temp_class_list.replace("[", "")
             temp_class_list = temp_class_list.replace("]", "")
@@ -125,19 +121,33 @@ def validate_class_list(value):
                 # )
     return value
 
-def validate_patch_size(self):
-    if isinstance(self.patch_size, int) or isinstance(self.patch_size, float):
-        self.patch_size = [self.patch_size]
-    if len(self.patch_size) == 1 and self.model.dimension is not None:
+
+def validate_patch_size(patch_size, dimension) -> list:
+    if isinstance(patch_size, int) or isinstance(patch_size, float):
+        patch_size = [patch_size]
+    if len(patch_size) == 1 and dimension is not None:
         actual_patch_size = []
-        for _ in range(self.model.dimension):
-            actual_patch_size.append(self.patch_size[0])
-        self.patch_size = actual_patch_size
-    if len(self.patch_size) == 2:  # 2d check
+        for _ in range(dimension):
+            actual_patch_size.append(patch_size[0])
+        patch_size = actual_patch_size
+    if len(patch_size) == 2:  # 2d check
         # ensuring same size during torchio processing
-        self.patch_size.append(1)
-        if self.model.dimension is None:
-            self.model.dimension = 2
-    elif len(self.patch_size) == 3:  # 2d check
-        if self.model.dimension is None:
-            self.model.dimension = 3
+        patch_size.append(1)
+        if dimension is None:
+            dimension = 2
+    elif len(patch_size) == 3:  # 2d check
+        if dimension is None:
+            dimension = 3
+    return [patch_size, dimension]
+
+
+def validate_norm_type(norm_type, architecture):
+    if norm_type is None or norm_type.lower() == "none":
+        if "vgg" in architecture:
+            raise ValueError(
+                "Normalization type cannot be 'None' for non-VGG architectures"
+            )
+    else:
+        print("WARNING: Initializing 'norm_type' as 'batch'", flush=True)
+        norm_type = "batch"
+    return norm_type
