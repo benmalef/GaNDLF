@@ -14,9 +14,10 @@ TYPE_OPTIONS = Literal[
     "exp_range",
 ]
 
+
 # It allows extra parameters
 class Scheduler(BaseModel):
-    model_config = ConfigDict(extra= "allow")
+    model_config = ConfigDict(extra="allow")
     type: TYPE_OPTIONS = Field(
         description="triangle/triangle_modified use LambdaLR but triangular/triangular2/exp_range uses CyclicLR"
     )

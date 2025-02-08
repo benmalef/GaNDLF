@@ -1,5 +1,11 @@
 import traceback
+from copy import deepcopy
 
+import numpy as np
+import sys
+
+from GANDLF.Configuration.Parameters.optimizer_parameters import Optimizer
+from GANDLF.Configuration.Parameters.patch_sampler import PatchSampler
 from GANDLF.Configuration.Parameters.scheduler_parameters import Scheduler
 from GANDLF.Configuration.utils import initialize_key
 from GANDLF.metrics import surface_distance_ids
@@ -168,5 +174,96 @@ def validate_schedular(value, learning_rate):
     if isinstance(value, str):
         value = Scheduler(type=value)
     if value.step_size is None:
-            value.step_size = learning_rate / 5.0
+        value.step_size = learning_rate / 5.0
     return value
+
+
+def validate_optimizer(value):
+    if isinstance(value, str):
+        value = Optimizer(type=value)
+    return value
+
+
+def validate_data_preprocessing(value) -> dict:
+    if not (value is None):
+        # perform this only when pre-processing is defined
+        if len(value) > 0:
+            thresholdOrClip = False
+            # this can be extended, as required
+            thresholdOrClipDict = ["threshold", "clip", "clamp"]
+
+            resize_requested = False
+            temp_dict = deepcopy(value)
+            for key in value:
+                if key in ["resize", "resize_image", "resize_images", "resize_patch"]:
+                    resize_requested = True
+
+                if key in ["resample_min", "resample_minimum"]:
+                    if "resolution" in value[key]:
+                        resize_requested = True
+                        resolution_temp = np.array(
+                            value[key]["resolution"]
+                        )
+                        if resolution_temp.size == 1:
+                            temp_dict[key]["resolution"] = np.array(
+                                [resolution_temp, resolution_temp]
+                            ).tolist()
+                    else:
+                        temp_dict.pop(key)
+
+            value= temp_dict
+
+            if resize_requested and "resample" in value:
+                for key in ["resize", "resize_image", "resize_images", "resize_patch"]:
+                    if key in value:
+                      value.pop(key)
+
+                print(
+                    "WARNING: Different 'resize' operations are ignored as 'resample' is defined under 'data_processing'",
+                    file=sys.stderr,
+                )
+
+            # iterate through all keys
+            for key in value:  # iterate through all keys
+                if key in thresholdOrClipDict:
+                    # we only allow one of threshold or clip to occur and not both
+                    assert not (
+                        thresholdOrClip
+                    ), "Use only `threshold` or `clip`, not both"
+                    thresholdOrClip = True
+                    # initialize if nothing is present
+                    if not (isinstance(value[key], dict)):
+                        value[key] = {}
+
+                    # if one of the required parameters is not present, initialize with lowest/highest possible values
+                    # this ensures the absence of a field doesn't affect processing
+                    # for threshold or clip, ensure min and max are defined
+                    if not "min" in value[key]:
+                        value[key]["min"] = sys.float_info.min
+                    if not "max" in value[key]:
+                        value[key]["max"] = sys.float_info.max
+
+                if key == "histogram_matching":
+                    if value[key] is not False:
+                        if not (isinstance(value[key], dict)):
+                            value[key] = {}
+
+                if key == "histogram_equalization":
+                    if value[key] is not False:
+                        # if histogram equalization is enabled, call histogram_matching
+                        value["histogram_matching"] = {}
+
+                if key == "adaptive_histogram_equalization":
+                    if value[key] is not False:
+                        # if histogram equalization is enabled, call histogram_matching
+                        value["histogram_matching"] = {
+                            "target": "adaptive"
+                        }
+    return value
+
+
+def validate_patch_sampler(value):
+    if isinstance(value, str):
+        value = PatchSampler(type=value.lower())
+    return value
+

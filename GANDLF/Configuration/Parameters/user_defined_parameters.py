@@ -1,8 +1,8 @@
 from typing import Union
 from pydantic import BaseModel, model_validator, Field, AfterValidator
-
 from GANDLF.Configuration.Parameters.default_parameters import DefaultParameters
 from GANDLF.Configuration.Parameters.nested_training_parameters import NestedTraining
+from GANDLF.Configuration.Parameters.patch_sampler import PatchSampler
 from GANDLF.config_manager import version_check
 from importlib.metadata import version
 from typing_extensions import Self, Literal, Annotated
@@ -44,12 +44,19 @@ class UserDefinedParameters(DefaultParameters):
     parallel_compute_command: str = Field(
         default="", description="Parallel compute command."
     )
-    scheduler: Union[str, Scheduler] = Field(description="Scheduler.")
+    scheduler: Union[str, Scheduler] = Field(description="Scheduler.", default=Scheduler(type="triangle_modified"))
+    optimizer: Union[str, Optimizer] = Field(description="Optimizer.",default=Optimizer(type="adam"))
+    patch_sampler: Union[str, PatchSampler] = Field(description="Patch sampler.", default=PatchSampler())
+
+
+
+    #TODO: It should be defined with a better way (using a BaseMedel class)
+    data_preprocessing: Annotated[Union[dict], Field(description="Data preprocessing."), AfterValidator(validate_data_preprocessing)] = {}
 
     # Validators
     @model_validator(mode="after")
     def validate(self) -> Self:
-        # valiadate the patch_size
+        # validate the patch_size
         self.patch_size, self.model.dimension = validate_patch_size(
             self.patch_size, self.model.dimension
         )
@@ -59,5 +66,9 @@ class UserDefinedParameters(DefaultParameters):
         )
         # validate scheduler
         self.scheduler = validate_schedular(self.scheduler, self.learning_rate)
+        # validate optimizer
+        self.optimizer = validate_optimizer(self.optimizer)
+        #validate patch_sampler
+        self.patch_sampler = validate_patch_sampler(self.patch_sampler)
 
         return self

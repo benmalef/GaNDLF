@@ -1,5 +1,7 @@
 from pydantic import BaseModel, ConfigDict
-from GANDLF.Configuration.Parameters.user_defined_parameters import UserDefinedParameters
+from GANDLF.Configuration.Parameters.user_defined_parameters import (
+    UserDefinedParameters,
+)
 
 
 class ParametersConfiguration(BaseModel):
