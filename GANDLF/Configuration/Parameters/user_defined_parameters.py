@@ -1,14 +1,13 @@
 from typing import Union
-from pydantic import BaseModel, model_validator, Field, AfterValidator, ConfigDict
+from pydantic import BaseModel, model_validator, Field, AfterValidator
 
-from GANDLF.Configuration.default_parameters import DefaultParameters
-from GANDLF.Configuration.nested_training_parameters import NestedTraining
-from GANDLF.Configuration.scheduler_parameters import Scheduler
+from GANDLF.Configuration.Parameters.default_parameters import DefaultParameters
+from GANDLF.Configuration.Parameters.nested_training_parameters import NestedTraining
 from GANDLF.config_manager import version_check
 from importlib.metadata import version
-from typing_extensions import Self, Literal, Annotated, Optional
+from typing_extensions import Self, Literal, Annotated
 from GANDLF.Configuration.validators import *
-from GANDLF.Configuration.model_parameters import Model
+from GANDLF.Configuration.Parameters.model_parameters import Model
 
 
 class Version(BaseModel):  # TODO: Maybe should be to another folder
@@ -19,6 +18,7 @@ class Version(BaseModel):  # TODO: Maybe should be to another folder
     def validate_version(self) -> Self:
         if version_check(self.model_dump(), version_to_check=version("GANDLF")):
             return self
+
 
 class UserDefinedParameters(DefaultParameters):
     version: Version = Field(
@@ -57,8 +57,7 @@ class UserDefinedParameters(DefaultParameters):
         self.parallel_compute_command = validate_parallel_compute_command(
             self.parallel_compute_command
         )
-        #validate scheduler
+        # validate scheduler
         self.scheduler = validate_schedular(self.scheduler, self.learning_rate)
-
 
         return self

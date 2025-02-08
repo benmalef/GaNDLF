@@ -1,6 +1,6 @@
 import traceback
 
-from GANDLF.Configuration.scheduler_parameters import Scheduler
+from GANDLF.Configuration.Parameters.scheduler_parameters import Scheduler
 from GANDLF.Configuration.utils import initialize_key
 from GANDLF.metrics import surface_distance_ids
 

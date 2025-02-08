@@ -2,7 +2,7 @@ from pydantic import BaseModel, Field, model_validator
 from typing_extensions import Self
 
 
-class NestedTraining(BaseModel):  # TODO: Maybe should be in another folder
+class NestedTraining(BaseModel):
     stratified: bool = Field(
         default=False,
         description="this will perform stratified k-fold cross-validation but only with offline data splitting",
@@ -22,4 +22,3 @@ class NestedTraining(BaseModel):  # TODO: Maybe should be in another folder
         if self.proportional is not None:
             self.stratified = self.proportional
         return self
-
