@@ -3,7 +3,7 @@ from pydantic import BaseModel, model_validator, Field, AfterValidator
 from GANDLF.Configuration.Parameters.default_parameters import DefaultParameters
 from GANDLF.Configuration.Parameters.nested_training_parameters import NestedTraining
 from GANDLF.Configuration.Parameters.patch_sampler import PatchSampler
-from GANDLF.config_manager import version_check
+from GANDLF.utils import version_check
 from importlib.metadata import version
 from typing_extensions import Self, Literal, Annotated
 from GANDLF.Configuration.Parameters.validators import *
