@@ -1,5 +1,6 @@
 import traceback
 from copy import deepcopy
+from GANDLF.data.post_process import postprocessing_after_reverse_one_hot_encoding
 
 import numpy as np
 import sys
@@ -261,9 +262,185 @@ def validate_data_preprocessing(value) -> dict:
                         }
     return value
 
+def validate_data_postprocessing(value) -> dict:
+    value = initialize_key(
+        value, "data_postprocessing_after_reverse_one_hot_encoding", {}
+    )
+    temp_dict = deepcopy(value)
+    for key in temp_dict:
+        if key in postprocessing_after_reverse_one_hot_encoding:
+            value["data_postprocessing_after_reverse_one_hot_encoding"][key] = value[key]
+            value.pop(key)
+    return value
 
 def validate_patch_sampler(value):
     if isinstance(value, str):
         value = PatchSampler(type=value.lower())
     return value
 
+def validate_data_augmentation(value,patch_size)-> dict:
+    value["default_probability"] = value.get("default_probability", 0.5)
+    if not (value is None):
+        if len(value) > 0:  # only when augmentations are defined
+            # special case for random swapping and elastic transformations - which takes a patch size for computation
+            for key in ["swap", "elastic"]:
+                if key in value:
+                    value[key] = initialize_key(
+                        value[key],
+                        "patch_size",
+                        np.round(np.array(patch_size) / 10)
+                        .astype("int")
+                        .tolist(),
+                    )
+
+            # special case for swap default initialization
+            if "swap" in value:
+                value["swap"] = initialize_key(
+                    value["swap"], "num_iterations", 100
+                )
+
+            # special case for affine default initialization
+            if "affine" in value:
+                value["affine"] = initialize_key(
+                    value["affine"], "scales", 0.1
+                )
+                value["affine"] = initialize_key(
+                    value["affine"], "degrees", 15
+                )
+                value["affine"] = initialize_key(
+                    value["affine"], "translation", 2
+                )
+
+            if "motion" in value:
+                value["motion"] = initialize_key(
+                    value["motion"], "num_transforms", 2
+                )
+                value["motion"] = initialize_key(
+                    value["motion"], "degrees", 15
+                )
+                value["motion"] = initialize_key(
+                    value["motion"], "translation", 2
+                )
+                value["motion"] = initialize_key(
+                    value["motion"], "interpolation", "linear"
+                )
+
+            # special case for random blur/noise - which takes a std-dev range
+            for std_aug in ["blur", "noise_var"]:
+                if std_aug in value:
+                    value[std_aug] = initialize_key(
+                        value[std_aug], "std", None
+                    )
+            for std_aug in ["noise"]:
+                if std_aug in value:
+                    value[std_aug] = initialize_key(
+                        value[std_aug], "std", [0, 1]
+                    )
+
+            # special case for random noise - which takes a mean range
+            for mean_aug in ["noise", "noise_var"]:
+                if mean_aug in value:
+                    value[mean_aug] = initialize_key(
+                        value[mean_aug], "mean", 0
+                    )
+
+            # special case for augmentations that need axis defined
+            for axis_aug in ["flip", "anisotropic", "rotate_90", "rotate_180"]:
+                if axis_aug in value:
+                    value[axis_aug] = initialize_key(
+                        value[axis_aug], "axis", [0, 1, 2]
+                    )
+
+            # special case for colorjitter
+            if "colorjitter" in value:
+                value = initialize_key(
+                    value, "colorjitter", {}
+                )
+                for key in ["brightness", "contrast", "saturation"]:
+                    value["colorjitter"] = initialize_key(
+                        value["colorjitter"], key, [0, 1]
+                    )
+                value["colorjitter"] = initialize_key(
+                    value["colorjitter"], "hue", [-0.5, 0.5]
+                )
+
+            # Added HED augmentation in gandlf
+            hed_augmentation_types = [
+                "hed_transform",
+                # "hed_transform_light",
+                # "hed_transform_heavy",
+            ]
+            for augmentation_type in hed_augmentation_types:
+                if augmentation_type in value:
+                    value = initialize_key(
+                        value, "hed_transform", {}
+                    )
+                    ranges = [
+                        "haematoxylin_bias_range",
+                        "eosin_bias_range",
+                        "dab_bias_range",
+                        "haematoxylin_sigma_range",
+                        "eosin_sigma_range",
+                        "dab_sigma_range",
+                    ]
+
+                    default_range = (
+                        [-0.1, 0.1]
+                        if augmentation_type == "hed_transform"
+                        else (
+                            [-0.03, 0.03]
+                            if augmentation_type == "hed_transform_light"
+                            else [-0.95, 0.95]
+                        )
+                    )
+
+                    for key in ranges:
+                        value["hed_transform"] = initialize_key(
+                            value["hed_transform"],
+                            key,
+                            default_range,
+                        )
+
+                    value["hed_transform"] = initialize_key(
+                        value["hed_transform"],
+                        "cutoff_range",
+                        [0, 1],
+                    )
+
+            # special case for anisotropic
+            if "anisotropic" in value:
+                if not ("downsampling" in value["anisotropic"]):
+                    default_downsampling = 1.5
+                else:
+                    default_downsampling = value["anisotropic"][
+                        "downsampling"
+                    ]
+
+                initialize_downsampling = False
+                if isinstance(default_downsampling, list):
+                    if len(default_downsampling) != 2:
+                        initialize_downsampling = True
+                        print(
+                            "WARNING: 'anisotropic' augmentation needs to be either a single number of a list of 2 numbers: https://torchio.readthedocs.io/transforms/augmentation.html?highlight=randomswap#torchio.transforms.RandomAnisotropy.",
+                            file=sys.stderr,
+                        )
+                        default_downsampling = default_downsampling[0]  # only
+                else:
+                    initialize_downsampling = True
+
+                if initialize_downsampling:
+                    if default_downsampling < 1:
+                        print(
+                            "WARNING: 'anisotropic' augmentation needs the 'downsampling' parameter to be greater than 1, defaulting to 1.5.",
+                            file=sys.stderr,
+                        )
+                        # default
+                    value["anisotropic"]["downsampling"] = 1.5
+
+            for key in value:
+                if key != "default_probability":
+                    value[key] = initialize_key(
+                        value[key],
+                        "probability",
+                        value["default_probability"],
+                    )

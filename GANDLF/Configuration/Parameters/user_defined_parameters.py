@@ -19,6 +19,9 @@ class Version(BaseModel):  # TODO: Maybe should be to another folder
         if version_check(self.model_dump(), version_to_check=version("GANDLF")):
             return self
 
+class InferenceMechanism(BaseModel):
+    grid_aggregator_overlap: Literal["crop", "average"] = Field(default="crop")
+    patch_overlap:int = Field(default=0)
 
 class UserDefinedParameters(DefaultParameters):
     version: Version = Field(
@@ -45,14 +48,19 @@ class UserDefinedParameters(DefaultParameters):
         default="", description="Parallel compute command."
     )
     scheduler: Union[str, Scheduler] = Field(description="Scheduler.", default=Scheduler(type="triangle_modified"))
-    optimizer: Union[str, Optimizer] = Field(description="Optimizer.",default=Optimizer(type="adam"))
+    optimizer: Union[str, Optimizer] = Field(description="Optimizer.",default=Optimizer(type="adam"), alias="opt") #TODO: Check it again
     patch_sampler: Union[str, PatchSampler] = Field(description="Patch sampler.", default=PatchSampler())
+    inference_mechanism: InferenceMechanism = Field(description="Inference mechanism.",default=InferenceMechanism())
 
 
 
-    #TODO: It should be defined with a better way (using a BaseMedel class)
-    data_preprocessing: Annotated[Union[dict], Field(description="Data preprocessing."), AfterValidator(validate_data_preprocessing)] = {}
 
+    #TODO: It should be defined with a better way (using a BaseModel class)
+    data_preprocessing: Annotated[dict, Field(description="Data preprocessing."), AfterValidator(validate_data_preprocessing)] = {}
+    #TODO: It should be defined with a better way (using a BaseModel class)
+    data_postprocessing: Annotated[dict, Field(description="Data augmentation."), AfterValidator(validate_data_postprocessing)]={}
+    #TODO: It should be defined with a better way (using a BaseModel class)
+    data_augmentation: Annotated[dict, Field(description="Data augmentation.")] = {}
     # Validators
     @model_validator(mode="after")
     def validate(self) -> Self:
@@ -70,5 +78,7 @@ class UserDefinedParameters(DefaultParameters):
         self.optimizer = validate_optimizer(self.optimizer)
         #validate patch_sampler
         self.patch_sampler = validate_patch_sampler(self.patch_sampler)
+        # validate_data_augmentation
+        self.data_preprocessing = validate_data_augmentation(self.data_preprocessing,self.patch_size)
 
         return self

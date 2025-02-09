@@ -131,13 +131,11 @@ def _parseConfig(
     if not isinstance(config_file_path, dict):
         params = yaml.safe_load(open(config_file_path, "r"))
 
-    #
-    # if "resize" in params:
-    #     print(
-    #         "WARNING: 'resize' should be defined under 'data_processing', this will be skipped",
-    #         file=sys.stderr,
-    #     )
-    #
+    if "resize" in params:
+        print(
+            "WARNING: 'resize' should be defined under 'data_processing', this will be skipped",
+            file=sys.stderr,
+        )
 
     # this is NOT a required parameter - a user should be able to train with NO augmentations
     params = initialize_key(params, "data_augmentation", {})
@@ -311,296 +309,154 @@ def _parseConfig(
                         params["data_augmentation"]["default_probability"],
                     )
 
-    # # this is NOT a required parameter - a user should be able to train with NO built-in pre-processing
-    # params = initialize_key(params, "data_preprocessing", {})
-    # if not (params["data_preprocessing"] is None):
-    #     # perform this only when pre-processing is defined
-    #     if len(params["data_preprocessing"]) > 0:
-    #         thresholdOrClip = False
-    #         # this can be extended, as required
-    #         thresholdOrClipDict = ["threshold", "clip", "clamp"]
-    #
-    #         resize_requested = False
-    #         temp_dict = deepcopy(params["data_preprocessing"])
-    #         for key in params["data_preprocessing"]:
-    #             if key in ["resize", "resize_image", "resize_images", "resize_patch"]:
-    #                 resize_requested = True
-    #
-    #             if key in ["resample_min", "resample_minimum"]:
-    #                 if "resolution" in params["data_preprocessing"][key]:
-    #                     resize_requested = True
-    #                     resolution_temp = np.array(
-    #                         params["data_preprocessing"][key]["resolution"]
-    #                     )
-    #                     if resolution_temp.size == 1:
-    #                         temp_dict[key]["resolution"] = np.array(
-    #                             [resolution_temp, resolution_temp]
-    #                         ).tolist()
-    #                 else:
-    #                     temp_dict.pop(key)
-    #
-    #         params["data_preprocessing"] = temp_dict
-    #
-    #         if resize_requested and "resample" in params["data_preprocessing"]:
-    #             for key in ["resize", "resize_image", "resize_images", "resize_patch"]:
-    #                 if key in params["data_preprocessing"]:
-    #                     params["data_preprocessing"].pop(key)
-    #
-    #             print(
-    #                 "WARNING: Different 'resize' operations are ignored as 'resample' is defined under 'data_processing'",
-    #                 file=sys.stderr,
-    #             )
-    #
-    #         # iterate through all keys
-    #         for key in params["data_preprocessing"]:  # iterate through all keys
-    #             if key in thresholdOrClipDict:
-    #                 # we only allow one of threshold or clip to occur and not both
-    #                 assert not (
-    #                     thresholdOrClip
-    #                 ), "Use only `threshold` or `clip`, not both"
-    #                 thresholdOrClip = True
-    #                 # initialize if nothing is present
-    #                 if not (isinstance(params["data_preprocessing"][key], dict)):
-    #                     params["data_preprocessing"][key] = {}
-    #
-    #                 # if one of the required parameters is not present, initialize with lowest/highest possible values
-    #                 # this ensures the absence of a field doesn't affect processing
-    #                 # for threshold or clip, ensure min and max are defined
-    #                 if not "min" in params["data_preprocessing"][key]:
-    #                     params["data_preprocessing"][key]["min"] = sys.float_info.min
-    #                 if not "max" in params["data_preprocessing"][key]:
-    #                     params["data_preprocessing"][key]["max"] = sys.float_info.max
-    #
-    #             if key == "histogram_matching":
-    #                 if params["data_preprocessing"][key] is not False:
-    #                     if not (isinstance(params["data_preprocessing"][key], dict)):
-    #                         params["data_preprocessing"][key] = {}
-    #
-    #             if key == "histogram_equalization":
-    #                 if params["data_preprocessing"][key] is not False:
-    #                     # if histogram equalization is enabled, call histogram_matching
-    #                     params["data_preprocessing"]["histogram_matching"] = {}
-    #
-    #             if key == "adaptive_histogram_equalization":
-    #                 if params["data_preprocessing"][key] is not False:
-    #                     # if histogram equalization is enabled, call histogram_matching
-    #                     params["data_preprocessing"]["histogram_matching"] = {
-    #                         "target": "adaptive"
-    #                     }
-    #
-    # # this is NOT a required parameter - a user should be able to train with NO built-in post-processing
-    # params = initialize_key(params, "data_postprocessing", {})
-    # params = initialize_key(
-    #     params, "data_postprocessing_after_reverse_one_hot_encoding", {}
-    # )
-    # temp_dict = deepcopy(params["data_postprocessing"])
-    # for key in temp_dict:
-    #     if key in postprocessing_after_reverse_one_hot_encoding:
-    #         params["data_postprocessing_after_reverse_one_hot_encoding"][key] = params[
-    #             "data_postprocessing"
-    #         ][key]
-    #         params["data_postprocessing"].pop(key)
-    #    if "model" in params:
-        assert isinstance(
-            params["model"], dict
-        ), "The 'model' parameter needs to be populated as a dictionary"
-        assert (
-            len(params["model"]) > 0
-        ), "The 'model' parameter needs to be populated as a dictionary and should have all properties present"
-        assert (
-            "architecture" in params["model"]
-        ), "The 'model' parameter needs 'architecture' to be defined"
-        assert (
-            "final_layer" in params["model"]
-        ), "The 'model' parameter needs 'final_layer' to be defined"
-        assert (
-            "dimension" in params["model"]
-        ), "The 'model' parameter needs 'dimension' to be defined"
+    # this is NOT a required parameter - a user should be able to train with NO built-in pre-processing
+    params = initialize_key(params, "data_preprocessing", {})
+    if not (params["data_preprocessing"] is None):
+        # perform this only when pre-processing is defined
+        if len(params["data_preprocessing"]) > 0:
+            thresholdOrClip = False
+            # this can be extended, as required
+            thresholdOrClipDict = ["threshold", "clip", "clamp"]
 
-        if "amp" in params["model"]:
-            pass
-        else:
-            print("NOT using Mixed Precision Training")
-            params["model"]["amp"] = False
+            resize_requested = False
+            temp_dict = deepcopy(params["data_preprocessing"])
+            for key in params["data_preprocessing"]:
+                if key in ["resize", "resize_image", "resize_images", "resize_patch"]:
+                    resize_requested = True
 
-        if "norm_type" in params["model"]:
-            if (
-                params["model"]["norm_type"] == None
-                or params["model"]["norm_type"].lower() == "none"
-            ):
-                if not ("vgg" in params["model"]["architecture"]):
-                    raise ValueError(
-                        "Normalization type cannot be 'None' for non-VGG architectures"
-                    )
-        else:
-            print("WARNING: Initializing 'norm_type' as 'batch'", flush=True)
-            params["model"]["norm_type"] = "batch"
+                if key in ["resample_min", "resample_minimum"]:
+                    if "resolution" in params["data_preprocessing"][key]:
+                        resize_requested = True
+                        resolution_temp = np.array(
+                            params["data_preprocessing"][key]["resolution"]
+                        )
+                        if resolution_temp.size == 1:
+                            temp_dict[key]["resolution"] = np.array(
+                                [resolution_temp, resolution_temp]
+                            ).tolist()
+                    else:
+                        temp_dict.pop(key)
 
-        if not ("base_filters" in params["model"]):
-            base_filters = 32
-            params["model"]["base_filters"] = base_filters
-            print("Using default 'base_filters' in 'model': ", base_filters)
-        if not ("class_list" in params["model"]):
-            params["model"]["class_list"] = []  # ensure that this is initialized
-        if not ("ignore_label_validation" in params["model"]):
-            params["model"]["ignore_label_validation"] = None
-        if "batch_norm" in params["model"]:
-            print(
-                "WARNING: 'batch_norm' is no longer supported, please use 'norm_type' in 'model' instead",
-                flush=True,
-            )
-        params["model"]["print_summary"] = params["model"].get("print_summary", True)
+            params["data_preprocessing"] = temp_dict
 
-        channel_keys_to_check = ["n_channels", "channels", "model_channels"]
-        for key in channel_keys_to_check:
-            if key in params["model"]:
-                params["model"]["num_channels"] = params["model"][key]
-                break
+            if resize_requested and "resample" in params["data_preprocessing"]:
+                for key in ["resize", "resize_image", "resize_images", "resize_patch"]:
+                    if key in params["data_preprocessing"]:
+                        params["data_preprocessing"].pop(key)
 
-        # initialize model type for processing: if not defined, default to torch
-        if not ("type" in params["model"]):
-            params["model"]["type"] = "torch"
+                print(
+                    "WARNING: Different 'resize' operations are ignored as 'resample' is defined under 'data_processing'",
+                    file=sys.stderr,
+                )
 
-        # initialize openvino model data type for processing: if not defined, default to FP32
-        if not ("data_type" in params["model"]):
-            params["model"]["data_type"] = "FP32"
+            # iterate through all keys
+            for key in params["data_preprocessing"]:  # iterate through all keys
+                if key in thresholdOrClipDict:
+                    # we only allow one of threshold or clip to occur and not both
+                    assert not (
+                        thresholdOrClip
+                    ), "Use only `threshold` or `clip`, not both"
+                    thresholdOrClip = True
+                    # initialize if nothing is present
+                    if not (isinstance(params["data_preprocessing"][key], dict)):
+                        params["data_preprocessing"][key] = {}
 
-        # set default save strategy for model
-        if not ("save_at_every_epoch" in params["model"]):
-            params["model"]["save_at_every_epoch"] = False
+                    # if one of the required parameters is not present, initialize with lowest/highest possible values
+                    # this ensures the absence of a field doesn't affect processing
+                    # for threshold or clip, ensure min and max are defined
+                    if not "min" in params["data_preprocessing"][key]:
+                        params["data_preprocessing"][key]["min"] = sys.float_info.min
+                    if not "max" in params["data_preprocessing"][key]:
+                        params["data_preprocessing"][key]["max"] = sys.float_info.max
 
-        if params["model"]["save_at_every_epoch"]:
-            print(
-                "WARNING: 'save_at_every_epoch' will result in TREMENDOUS storage usage; use at your own risk."
-            )
+                if key == "histogram_matching":
+                    if params["data_preprocessing"][key] is not False:
+                        if not (isinstance(params["data_preprocessing"][key], dict)):
+                            params["data_preprocessing"][key] = {}
+
+                if key == "histogram_equalization":
+                    if params["data_preprocessing"][key] is not False:
+                        # if histogram equalization is enabled, call histogram_matching
+                        params["data_preprocessing"]["histogram_matching"] = {}
+
+                if key == "adaptive_histogram_equalization":
+                    if params["data_preprocessing"][key] is not False:
+                        # if histogram equalization is enabled, call histogram_matching
+                        params["data_preprocessing"]["histogram_matching"] = {
+                            "target": "adaptive"
+                        }
+
+    # this is NOT a required parameter - a user should be able to train with NO built-in post-processing
+    params = initialize_key(params, "data_postprocessing", {})
+    params = initialize_key(
+        params, "data_postprocessing_after_reverse_one_hot_encoding", {}
+    )
+    temp_dict = deepcopy(params["data_postprocessing"])
+    for key in temp_dict:
+        if key in postprocessing_after_reverse_one_hot_encoding:
+            params["data_postprocessing_after_reverse_one_hot_encoding"][key] = params[
+                "data_postprocessing"
+            ][key]
+            params["data_postprocessing"].pop(key)
+
+    if "opt" in params:
+        print("DeprecationWarning: 'opt' has been superseded by 'optimizer'")
+        params["optimizer"] = params["opt"]
 
 
-    # if isinstance(params["model"]["class_list"], str):
-    #     if ("||" in params["model"]["class_list"]) or (
-    #         "&&" in params["model"]["class_list"]
-    #     ):
-    #         # special case for multi-class computation - this needs to be handled during one-hot encoding mask construction
-    #         print(
-    #             "WARNING: This is a special case for multi-class computation, where different labels are processed together, `reverse_one_hot` will need mapping information to work correctly"
-    #         )
-    #         temp_classList = params["model"]["class_list"]
-    #         # we don't need the brackets
-    #         temp_classList = temp_classList.replace("[", "")
-    #         temp_classList = temp_classList.replace("]", "")
-    #         params["model"]["class_list"] = temp_classList.split(",")
-    #     else:
-    #         try:
-    #             params["model"]["class_list"] = eval(params["model"]["class_list"])
-    #         except Exception as e:
-    #             ## todo: ensure logging captures assertion errors
-    #             assert (
-    #                 False
-    #             ), f"Could not evaluate the `class_list` in `model`, Exception: {str(e)}, {traceback.format_exc()}"
-    #             # logging.error(
-    #             #     f"Could not evaluate the `class_list` in `model`, Exception: {str(e)}, {traceback.format_exc()}"
-    #             # )
-    #
-    # assert (
-    #     "nested_training" in params
-    # ), "The parameter 'nested_training' needs to be defined"
-    # # initialize defaults for nested training
-    # params["nested_training"]["stratified"] = params["nested_training"].get(
-    #     "stratified", False
-    # )
-    # params["nested_training"]["stratified"] = params["nested_training"].get(
-    #     "proportional", params["nested_training"]["stratified"]
-    # )
-    # params["nested_training"]["testing"] = params["nested_training"].get("testing", -5)
-    # params["nested_training"]["validation"] = params["nested_training"].get(
-    #     "validation", -5
-    # )
-    #
-    # parallel_compute_command = ""
-    # if "parallel_compute_command" in params:
-    #     parallel_compute_command = params["parallel_compute_command"]
-    #     parallel_compute_command = parallel_compute_command.replace("'", "")
-    #     parallel_compute_command = parallel_compute_command.replace('"', "")
-    # params["parallel_compute_command"] = parallel_compute_command
-    #
-    # if "opt" in params:
-    #     print("DeprecationWarning: 'opt' has been superseded by 'optimizer'")
-    #     params["optimizer"] = params["opt"]
-    #
-    # # initialize defaults for patch sampler
-    # temp_patch_sampler_dict = {
-    #     "type": "uniform",
-    #     "enable_padding": False,
-    #     "padding_mode": "symmetric",
-    #     "biased_sampling": False,
-    # }
-    # # check if patch_sampler is defined in the config
-    # if "patch_sampler" in params:
-    #     # if "patch_sampler" is a string, then it is the type of sampler
-    #     if isinstance(params["patch_sampler"], str):
-    #         print(
-    #             "WARNING: Defining 'patch_sampler' as a string will be deprecated in a future release, please use a dictionary instead"
-    #         )
-    #         temp_patch_sampler_dict["type"] = params["patch_sampler"].lower()
-    #     elif isinstance(params["patch_sampler"], dict):
-    #         # dict requires special handling
-    #         for key in params["patch_sampler"]:
-    #             temp_patch_sampler_dict[key] = params["patch_sampler"][key]
-    #
-    # # now assign the dict back to the params
-    # params["patch_sampler"] = temp_patch_sampler_dict
-    # del temp_patch_sampler_dict
-    #
-    # # define defaults
-    # for current_parameter in parameter_defaults:
-    #     params = initialize_parameter(
-    #         params, current_parameter, parameter_defaults[current_parameter], True
-    #     )
-    #
-    # for current_parameter in parameter_defaults_string:
-    #     params = initialize_parameter(
-    #         params,
-    #         current_parameter,
-    #         parameter_defaults_string[current_parameter],
-    #         False,
-    #     )
-    #
-    # # ensure that the scheduler and optimizer are dicts
-    # if isinstance(params["scheduler"], str):
-    #     temp_dict = {}
-    #     temp_dict["type"] = params["scheduler"]
-    #     params["scheduler"] = temp_dict
-    #
-    # if not ("step_size" in params["scheduler"]):
-    #     params["scheduler"]["step_size"] = params["learning_rate"] / 5.0
-    #     print(
-    #         "WARNING: Setting default step_size to:", params["scheduler"]["step_size"]
-    #     )
-    #
-    # # initialize default optimizer
-    # params["optimizer"] = params.get("optimizer", {})
-    # if isinstance(params["optimizer"], str):
-    #     temp_dict = {}
-    #     temp_dict["type"] = params["optimizer"]
-    #     params["optimizer"] = temp_dict
-    #
-    # # initialize defaults for DP
-    # if params.get("differential_privacy"):
-    #     params = parse_opacus_params(params, initialize_key)
-    #
-    # # initialize defaults for inference mechanism
-    # inference_mechanism = {"grid_aggregator_overlap": "crop", "patch_overlap": 0}
-    # initialize_inference_mechanism = False
-    # if not ("inference_mechanism" in params):
-    #     initialize_inference_mechanism = True
-    # elif not (isinstance(params["inference_mechanism"], dict)):
-    #     initialize_inference_mechanism = True
-    # else:
-    #     for key in inference_mechanism:
-    #         if not (key in params["inference_mechanism"]):
-    #             params["inference_mechanism"][key] = inference_mechanism[key]
-    #
-    # if initialize_inference_mechanism:
-    #     params["inference_mechanism"] = inference_mechanism
+    # define defaults
+    for current_parameter in parameter_defaults:
+        params = initialize_parameter(
+            params, current_parameter, parameter_defaults[current_parameter], True
+        )
+
+    for current_parameter in parameter_defaults_string:
+        params = initialize_parameter(
+            params,
+            current_parameter,
+            parameter_defaults_string[current_parameter],
+            False,
+        )
+
+
+    # initialize defaults for DP
+    if params.get("differential_privacy"):
+        params = parse_opacus_params(params, initialize_key)
+
+    # initialize defaults for inference mechanism
+    inference_mechanism = {"grid_aggregator_overlap": "crop", "patch_overlap": 0}
+    initialize_inference_mechanism = False
+    if not ("inference_mechanism" in params):
+        initialize_inference_mechanism = True
+    elif not (isinstance(params["inference_mechanism"], dict)):
+        initialize_inference_mechanism = True
+    else:
+        for key in inference_mechanism:
+            if not (key in params["inference_mechanism"]):
+                params["inference_mechanism"][key] = inference_mechanism[key]
+
+    if initialize_inference_mechanism:
+        params["inference_mechanism"] = inference_mechanism
+
+    return params
+
+
+def _parseConfig_temp(
+    config_file_path: Union[str, dict], version_check_flag: bool = True
+) -> None:
+    """
+    This function parses the configuration file and returns a dictionary of parameters.
+
+    Args:
+        config_file_path (Union[str, dict]): The filename of the configuration file.
+        version_check_flag (bool, optional): Whether to check the version in configuration file. Defaults to True.
+
+    Returns:
+        dict: The parameter dictionary.
+    """
+    params = config_file_path
+    if not isinstance(config_file_path, dict):
+        params = yaml.safe_load(open(config_file_path, "r"))
 
     return params
 
@@ -620,7 +476,7 @@ def ConfigManager(
     """
     try:
         parameters = Parameters(
-            **_parseConfig(config_file_path, version_check_flag)
+            **_parseConfig_temp(config_file_path, version_check_flag)
         ).model_dump()
         return parameters
     # except Exception as e:
