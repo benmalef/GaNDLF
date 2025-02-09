@@ -202,9 +202,7 @@ def validate_data_preprocessing(value) -> dict:
                 if key in ["resample_min", "resample_minimum"]:
                     if "resolution" in value[key]:
                         resize_requested = True
-                        resolution_temp = np.array(
-                            value[key]["resolution"]
-                        )
+                        resolution_temp = np.array(value[key]["resolution"])
                         if resolution_temp.size == 1:
                             temp_dict[key]["resolution"] = np.array(
                                 [resolution_temp, resolution_temp]
@@ -212,12 +210,12 @@ def validate_data_preprocessing(value) -> dict:
                     else:
                         temp_dict.pop(key)
 
-            value= temp_dict
+            value = temp_dict
 
             if resize_requested and "resample" in value:
                 for key in ["resize", "resize_image", "resize_images", "resize_patch"]:
                     if key in value:
-                      value.pop(key)
+                        value.pop(key)
 
                 print(
                     "WARNING: Different 'resize' operations are ignored as 'resample' is defined under 'data_processing'",
@@ -257,10 +255,9 @@ def validate_data_preprocessing(value) -> dict:
                 if key == "adaptive_histogram_equalization":
                     if value[key] is not False:
                         # if histogram equalization is enabled, call histogram_matching
-                        value["histogram_matching"] = {
-                            "target": "adaptive"
-                        }
+                        value["histogram_matching"] = {"target": "adaptive"}
     return value
+
 
 def validate_data_postprocessing(value) -> dict:
     value = initialize_key(
@@ -269,16 +266,20 @@ def validate_data_postprocessing(value) -> dict:
     temp_dict = deepcopy(value)
     for key in temp_dict:
         if key in postprocessing_after_reverse_one_hot_encoding:
-            value["data_postprocessing_after_reverse_one_hot_encoding"][key] = value[key]
+            value["data_postprocessing_after_reverse_one_hot_encoding"][key] = value[
+                key
+            ]
             value.pop(key)
     return value
+
 
 def validate_patch_sampler(value):
     if isinstance(value, str):
         value = PatchSampler(type=value.lower())
     return value
 
-def validate_data_augmentation(value,patch_size)-> dict:
+
+def validate_data_augmentation(value, patch_size) -> dict:
     value["default_probability"] = value.get("default_probability", 0.5)
     if not (value is None):
         if len(value) > 0:  # only when augmentations are defined
@@ -288,39 +289,23 @@ def validate_data_augmentation(value,patch_size)-> dict:
                     value[key] = initialize_key(
                         value[key],
                         "patch_size",
-                        np.round(np.array(patch_size) / 10)
-                        .astype("int")
-                        .tolist(),
+                        np.round(np.array(patch_size) / 10).astype("int").tolist(),
                     )
 
             # special case for swap default initialization
             if "swap" in value:
-                value["swap"] = initialize_key(
-                    value["swap"], "num_iterations", 100
-                )
+                value["swap"] = initialize_key(value["swap"], "num_iterations", 100)
 
             # special case for affine default initialization
             if "affine" in value:
-                value["affine"] = initialize_key(
-                    value["affine"], "scales", 0.1
-                )
-                value["affine"] = initialize_key(
-                    value["affine"], "degrees", 15
-                )
-                value["affine"] = initialize_key(
-                    value["affine"], "translation", 2
-                )
+                value["affine"] = initialize_key(value["affine"], "scales", 0.1)
+                value["affine"] = initialize_key(value["affine"], "degrees", 15)
+                value["affine"] = initialize_key(value["affine"], "translation", 2)
 
             if "motion" in value:
-                value["motion"] = initialize_key(
-                    value["motion"], "num_transforms", 2
-                )
-                value["motion"] = initialize_key(
-                    value["motion"], "degrees", 15
-                )
-                value["motion"] = initialize_key(
-                    value["motion"], "translation", 2
-                )
+                value["motion"] = initialize_key(value["motion"], "num_transforms", 2)
+                value["motion"] = initialize_key(value["motion"], "degrees", 15)
+                value["motion"] = initialize_key(value["motion"], "translation", 2)
                 value["motion"] = initialize_key(
                     value["motion"], "interpolation", "linear"
                 )
@@ -328,34 +313,24 @@ def validate_data_augmentation(value,patch_size)-> dict:
             # special case for random blur/noise - which takes a std-dev range
             for std_aug in ["blur", "noise_var"]:
                 if std_aug in value:
-                    value[std_aug] = initialize_key(
-                        value[std_aug], "std", None
-                    )
+                    value[std_aug] = initialize_key(value[std_aug], "std", None)
             for std_aug in ["noise"]:
                 if std_aug in value:
-                    value[std_aug] = initialize_key(
-                        value[std_aug], "std", [0, 1]
-                    )
+                    value[std_aug] = initialize_key(value[std_aug], "std", [0, 1])
 
             # special case for random noise - which takes a mean range
             for mean_aug in ["noise", "noise_var"]:
                 if mean_aug in value:
-                    value[mean_aug] = initialize_key(
-                        value[mean_aug], "mean", 0
-                    )
+                    value[mean_aug] = initialize_key(value[mean_aug], "mean", 0)
 
             # special case for augmentations that need axis defined
             for axis_aug in ["flip", "anisotropic", "rotate_90", "rotate_180"]:
                 if axis_aug in value:
-                    value[axis_aug] = initialize_key(
-                        value[axis_aug], "axis", [0, 1, 2]
-                    )
+                    value[axis_aug] = initialize_key(value[axis_aug], "axis", [0, 1, 2])
 
             # special case for colorjitter
             if "colorjitter" in value:
-                value = initialize_key(
-                    value, "colorjitter", {}
-                )
+                value = initialize_key(value, "colorjitter", {})
                 for key in ["brightness", "contrast", "saturation"]:
                     value["colorjitter"] = initialize_key(
                         value["colorjitter"], key, [0, 1]
@@ -372,9 +347,7 @@ def validate_data_augmentation(value,patch_size)-> dict:
             ]
             for augmentation_type in hed_augmentation_types:
                 if augmentation_type in value:
-                    value = initialize_key(
-                        value, "hed_transform", {}
-                    )
+                    value = initialize_key(value, "hed_transform", {})
                     ranges = [
                         "haematoxylin_bias_range",
                         "eosin_bias_range",
@@ -396,15 +369,11 @@ def validate_data_augmentation(value,patch_size)-> dict:
 
                     for key in ranges:
                         value["hed_transform"] = initialize_key(
-                            value["hed_transform"],
-                            key,
-                            default_range,
+                            value["hed_transform"], key, default_range
                         )
 
                     value["hed_transform"] = initialize_key(
-                        value["hed_transform"],
-                        "cutoff_range",
-                        [0, 1],
+                        value["hed_transform"], "cutoff_range", [0, 1]
                     )
 
             # special case for anisotropic
@@ -412,9 +381,7 @@ def validate_data_augmentation(value,patch_size)-> dict:
                 if not ("downsampling" in value["anisotropic"]):
                     default_downsampling = 1.5
                 else:
-                    default_downsampling = value["anisotropic"][
-                        "downsampling"
-                    ]
+                    default_downsampling = value["anisotropic"]["downsampling"]
 
                 initialize_downsampling = False
                 if isinstance(default_downsampling, list):
@@ -440,7 +407,5 @@ def validate_data_augmentation(value,patch_size)-> dict:
             for key in value:
                 if key != "default_probability":
                     value[key] = initialize_key(
-                        value[key],
-                        "probability",
-                        value["default_probability"],
+                        value[key], "probability", value["default_probability"]
                     )

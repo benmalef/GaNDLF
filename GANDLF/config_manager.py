@@ -403,7 +403,6 @@ def _parseConfig(
         print("DeprecationWarning: 'opt' has been superseded by 'optimizer'")
         params["optimizer"] = params["opt"]
 
-
     # define defaults
     for current_parameter in parameter_defaults:
         params = initialize_parameter(
@@ -417,7 +416,6 @@ def _parseConfig(
             parameter_defaults_string[current_parameter],
             False,
         )
-
 
     # initialize defaults for DP
     if params.get("differential_privacy"):
