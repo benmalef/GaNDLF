@@ -19,6 +19,7 @@ ARCHITECTURE_OPTIONS = Literal[
     "uinc",
     "vgg",
     "densenet",
+    "vgg16"
 ]
 NORM_TYPE_OPTIONS = Literal["batch", "instance", "None"]
 
