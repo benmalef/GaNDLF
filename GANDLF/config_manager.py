@@ -1,7 +1,7 @@
 # import logging
 from typing import Optional, Union
 from pydantic import ValidationError
-import  yaml
+import yaml
 
 
 from GANDLF.Configuration.Parameters.parameters import Parameters
