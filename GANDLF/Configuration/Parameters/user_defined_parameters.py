@@ -53,8 +53,8 @@ class UserDefinedParameters(DefaultParameters):
         description="Scheduler.", default=Scheduler(type="triangle_modified")
     )
     optimizer: Union[str, Optimizer] = Field(
-        description="Optimizer.", default=Optimizer(type="adam"), alias="opt"
-    )  # TODO: Check it again
+        description="Optimizer.", default=Optimizer(type="adam"),
+    )  # TODO: Check it again for (opt)
     patch_sampler: Union[str, PatchSampler] = Field(
         description="Patch sampler.", default=PatchSampler()
     )
@@ -95,8 +95,8 @@ class UserDefinedParameters(DefaultParameters):
         # validate patch_sampler
         self.patch_sampler = validate_patch_sampler(self.patch_sampler)
         # validate_data_augmentation
-        self.data_preprocessing = validate_data_augmentation(
-            self.data_preprocessing, self.patch_size
+        self.data_augmentation = validate_data_augmentation(
+            self.data_augmentation, self.patch_size
         )
 
         return self

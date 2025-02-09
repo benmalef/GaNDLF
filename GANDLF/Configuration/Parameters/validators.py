@@ -409,3 +409,4 @@ def validate_data_augmentation(value, patch_size) -> dict:
                     value[key] = initialize_key(
                         value[key], "probability", value["default_probability"]
                     )
+    return value
