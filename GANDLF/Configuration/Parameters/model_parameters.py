@@ -44,6 +44,7 @@ class Model(BaseModel):
         validation_alias=AliasChoices(
             "num_channels", "n_channels", "channels", "model_channels"
         ),
+        default=3,
     )  # TODO: check it
     type: Optional[str] = Field(description="Type of model.", default="torch")
     data_type: str = Field(description="Data type.", default="FP32")
