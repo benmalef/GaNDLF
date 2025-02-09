@@ -41,7 +41,7 @@ class UserDefinedParameters(DefaultParameters):
         AfterValidator(validate_loss_function),
     ]
     metrics: Annotated[
-        list[Union[str,dict]],
+        list[Union[str, dict]],
         Field(description="Metrics."),
         AfterValidator(validate_metrics),
     ]
@@ -53,7 +53,7 @@ class UserDefinedParameters(DefaultParameters):
         description="Scheduler.", default=Scheduler(type="triangle_modified")
     )
     optimizer: Union[str, Optimizer] = Field(
-        description="Optimizer.", default=Optimizer(type="adam"),
+        description="Optimizer.", default=Optimizer(type="adam")
     )  # TODO: Check it again for (opt)
     patch_sampler: Union[str, PatchSampler] = Field(
         description="Patch sampler.", default=PatchSampler()
