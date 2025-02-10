@@ -20,6 +20,7 @@ ARCHITECTURE_OPTIONS = Literal[
     "vgg",
     "densenet",
     "vgg16",
+    "sdnet"
 ]
 NORM_TYPE_OPTIONS = Literal["batch", "instance", "None"]
 
@@ -51,7 +52,7 @@ class Model(BaseModel):
     data_type: str = Field(description="Data type.", default="FP32")
     save_at_every_epoch: bool = Field(default=False, description="Save at every epoch.")
     amp: bool = Field(default=False, description="Amplifier.")
-    ignore_label_validation: int = Field(
+    ignore_label_validation: Optional[int] = Field(
         default=None, description="Ignore label validation."
     )  # TODO:  To check it
     print_summary: bool = Field(default=True, description="Print summary.")

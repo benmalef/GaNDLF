@@ -1,5 +1,5 @@
 from pydantic import BaseModel, Field, model_validator
-from typing_extensions import Self
+from typing_extensions import Self, Optional
 
 
 class NestedTraining(BaseModel):
@@ -15,7 +15,7 @@ class NestedTraining(BaseModel):
         default=-5,
         description="this controls the number of validation data folds to be used for model *selection* during training (not used for back-propagation)",
     )
-    proportional: bool = Field(default=None)
+    proportional: Optional[bool] = Field(default=None)
 
     @model_validator(mode="after")
     def validate_nested_training(self) -> Self:
