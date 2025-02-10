@@ -71,9 +71,6 @@ class Model(BaseModel):
         default=None, description="Ignore label validation."
     )  # TODO:  To check it
     print_summary: bool = Field(default=True, description="Print summary.")
-    batch_norm: Optional[str] = Field(
-        default=None
-    )  # TODO: Check it for deprecated option
 
     @model_validator(mode="after")
     def model_validate(self) -> Self:
@@ -96,9 +93,6 @@ class Model(BaseModel):
             self.base_filters = 32
             print("Using default 'base_filters' in 'model': ", self.base_filters)
 
-        if self.batch_norm is not None:
-            print(
-                "WARNING: 'batch_norm' is no longer supported, please use 'norm_type' in 'model' instead"
-            )
+
 
         return self
