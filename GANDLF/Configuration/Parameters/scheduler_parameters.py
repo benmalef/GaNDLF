@@ -7,7 +7,7 @@ TYPE_OPTIONS = Literal[
     "triangle_modified",
     "exp",
     "step",
-    "reduce_on_plateau",
+    "reduce-on-plateau",
     "cosineannealing",
     "triangular",
     "triangular2",
