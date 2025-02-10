@@ -41,7 +41,7 @@ class UserDefinedParameters(DefaultParameters):
         AfterValidator(validate_loss_function),
     ]
     metrics: Annotated[
-        list[Union[str, dict]],
+        [Union[dict, list[Union[str, dict]]]],
         Field(description="Metrics."),
         AfterValidator(validate_metrics),
     ]

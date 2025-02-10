@@ -20,7 +20,7 @@ ARCHITECTURE_OPTIONS = Literal[
     "vgg",
     "densenet",
     "vgg16",
-    "sdnet"
+    "sdnet",
 ]
 NORM_TYPE_OPTIONS = Literal["batch", "instance", "None"]
 
@@ -56,7 +56,9 @@ class Model(BaseModel):
         default=None, description="Ignore label validation."
     )  # TODO:  To check it
     print_summary: bool = Field(default=True, description="Print summary.")
-    batch_norm: str = Field(default=None)  # TODO: Check it for deprecated option
+    batch_norm: Optional[str] = Field(
+        default=None
+    )  # TODO: Check it for deprecated option
 
     @model_validator(mode="after")
     def model_validate(self) -> Self:
