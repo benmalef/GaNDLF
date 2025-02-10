@@ -64,14 +64,13 @@ class UserDefinedParameters(DefaultParameters):
     data_postprocessing_after_reverse_one_hot_encoding: dict = Field(
         description="data_postprocessing_after_reverse_one_hot_encoding.", default={}
     )
-
+    differential_privacy: dict = Field(description="Differential privacy.", default={})
     # TODO: It should be defined with a better way (using a BaseModel class)
     data_preprocessing: Annotated[
         dict,
         Field(description="Data preprocessing."),
         AfterValidator(validate_data_preprocessing),
     ] = {}
-    # TODO: It should be defined with a better way (using a BaseModel class)
     # TODO: It should be defined with a better way (using a BaseModel class)
     data_augmentation: Annotated[dict, Field(description="Data augmentation.")] = {}
 
@@ -104,5 +103,6 @@ class UserDefinedParameters(DefaultParameters):
             self.data_postprocessing_after_reverse_one_hot_encoding,
             self.data_postprocessing,
         )
-
+        #validate differential_privacy
+        self.differential_privacy = validate_differential_privacy(self.differential_privacy,self.batch_size)
         return self

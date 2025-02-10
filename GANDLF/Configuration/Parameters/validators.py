@@ -407,3 +407,47 @@ def validate_data_augmentation(value, patch_size) -> dict:
                         value[key], "probability", value["default_probability"]
                     )
     return value
+
+def validate_differential_privacy(value, batch_size):
+    # if not isinstance(value, dict):
+    #     print(
+    #         "WARNING: Non dictionary value for the key: 'differential_privacy' was used, replacing with default valued dictionary."
+    #     )
+    #     value = {}
+        # these are some defaults
+    value = initialize_key(
+        value, "noise_multiplier", 10.0
+    )
+    value = initialize_key(
+        value, "max_grad_norm", 1.0
+    )
+    value = initialize_key(
+        value, "accountant", "rdp"
+    )
+    value = initialize_key(
+        value, "secure_mode", False
+    )
+    value = initialize_key(
+        value, "allow_opacus_model_fix", True
+    )
+    value = initialize_key(
+        value, "delta", 1e-5
+    )
+    value = initialize_key(
+        value, "physical_batch_size", batch_size
+    )
+
+    if value["physical_batch_size"] > batch_size:
+        print(
+            f"WARNING: The physical batch size {value['physical_batch_size']} is greater"
+            f"than the batch size {batch_size}, setting the physical batch size to the batch size."
+        )
+    value["physical_batch_size"] = batch_size
+
+    # these keys need to be parsed as floats, not strings
+    for key in ["noise_multiplier", "max_grad_norm", "delta", "epsilon"]:
+        if key in value:
+            value[key] = float(
+                value[key]
+            )
+    return value
