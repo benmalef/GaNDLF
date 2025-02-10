@@ -259,18 +259,15 @@ def validate_data_preprocessing(value) -> dict:
     return value
 
 
-def validate_data_postprocessing(value) -> dict:
-    value = initialize_key(
-        value, "data_postprocessing_after_reverse_one_hot_encoding", {}
-    )
+def validate_data_postprocessing_after_reverse_one_hot_encoding(
+    value, data_postproccesing
+) -> list:
     temp_dict = deepcopy(value)
     for key in temp_dict:
         if key in postprocessing_after_reverse_one_hot_encoding:
-            value["data_postprocessing_after_reverse_one_hot_encoding"][key] = value[
-                key
-            ]
-            value.pop(key)
-    return value
+            value[key] = data_postproccesing[key]
+            data_postproccesing.pop(key)
+    return [value, data_postproccesing]
 
 
 def validate_patch_sampler(value):

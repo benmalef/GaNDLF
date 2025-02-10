@@ -61,6 +61,9 @@ class UserDefinedParameters(DefaultParameters):
     inference_mechanism: InferenceMechanism = Field(
         description="Inference mechanism.", default=InferenceMechanism()
     )
+    data_postprocessing_after_reverse_one_hot_encoding: dict = Field(
+        description="data_postprocessing_after_reverse_one_hot_encoding."
+    )
 
     # TODO: It should be defined with a better way (using a BaseModel class)
     data_preprocessing: Annotated[
@@ -97,6 +100,14 @@ class UserDefinedParameters(DefaultParameters):
         # validate_data_augmentation
         self.data_augmentation = validate_data_augmentation(
             self.data_augmentation, self.patch_size
+        )
+        # validate data_postprocessing_after_reverse_one_hot_encoding
+        (
+            self.data_postprocessing_after_reverse_one_hot_encoding,
+            self.data_postprocessing,
+        ) = validate_data_postprocessing_after_reverse_one_hot_encoding(
+            self.data_postprocessing_after_reverse_one_hot_encoding,
+            self.data_postprocessing,
         )
 
         return self
