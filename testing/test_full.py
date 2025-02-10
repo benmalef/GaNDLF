@@ -988,8 +988,8 @@ def test_train_scheduler_classification_rad_2d(device):
         parameters = populate_header_in_parameters(parameters, parameters["headers"])
         parameters["model"]["onnx_export"] = False
         parameters["model"]["print_summary"] = False
-        parameters["scheduler"] = {}
-        parameters["scheduler"]["type"] = scheduler
+        parameters["scheduler"] = scheduler
+        # parameters["scheduler"]["type"] = scheduler
         parameters["nested_training"]["testing"] = -5
         parameters["nested_training"]["validation"] = -5
         sanitize_outputDir()
