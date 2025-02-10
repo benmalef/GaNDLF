@@ -62,8 +62,7 @@ class UserDefinedParameters(DefaultParameters):
         description="Inference mechanism.", default=InferenceMechanism()
     )
     data_postprocessing_after_reverse_one_hot_encoding: dict = Field(
-        description="data_postprocessing_after_reverse_one_hot_encoding.",
-        default = {}
+        description="data_postprocessing_after_reverse_one_hot_encoding.", default={}
     )
 
     # TODO: It should be defined with a better way (using a BaseModel class)
