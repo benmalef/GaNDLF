@@ -43,7 +43,7 @@ def ConfigManager(
     try:
         parameters = Parameters(
             **_parseConfig(config_file_path, version_check_flag)
-        ).model_dump()
+        ).model_dump(exclude_none=True)
         return parameters
     # except Exception as e:
     #     ## todo: ensure logging captures assertion errors

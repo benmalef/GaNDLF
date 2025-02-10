@@ -410,11 +410,13 @@ def validate_data_augmentation(value, patch_size) -> dict:
 
 
 def validate_differential_privacy(value, batch_size):
-    # if not isinstance(value, dict):
-    #     print(
-    #         "WARNING: Non dictionary value for the key: 'differential_privacy' was used, replacing with default valued dictionary."
-    #     )
-    #     value = {}
+    if value is None:
+        return value
+    if not isinstance(value, dict):
+        print(
+            "WARNING: Non dictionary value for the key: 'differential_privacy' was used, replacing with default valued dictionary."
+        )
+        value = {}
     # these are some defaults
     value = initialize_key(value, "noise_multiplier", 10.0)
     value = initialize_key(value, "max_grad_norm", 1.0)
