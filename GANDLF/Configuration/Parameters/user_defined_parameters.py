@@ -75,7 +75,6 @@ class UserDefinedParameters(DefaultParameters):
     data_postprocessing: Annotated[
         dict,
         Field(description="Data augmentation."),
-        AfterValidator(validate_data_postprocessing),
     ] = {}
     # TODO: It should be defined with a better way (using a BaseModel class)
     data_augmentation: Annotated[dict, Field(description="Data augmentation.")] = {}
