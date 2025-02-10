@@ -260,14 +260,14 @@ def validate_data_preprocessing(value) -> dict:
 
 
 def validate_data_postprocessing_after_reverse_one_hot_encoding(
-    value, data_postproccesing
+    value, data_postprocessing
 ) -> list:
     temp_dict = deepcopy(value)
     for key in temp_dict:
         if key in postprocessing_after_reverse_one_hot_encoding:
-            value[key] = data_postproccesing[key]
-            data_postproccesing.pop(key)
-    return [value, data_postproccesing]
+            value[key] = data_postprocessing[key]
+            data_postprocessing.pop(key)
+    return [value, data_postprocessing]
 
 
 def validate_patch_sampler(value):
