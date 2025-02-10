@@ -12,6 +12,7 @@ TYPE_OPTIONS = Literal[
     "triangular",
     "triangular2",
     "exp_range",
+    "exponential"
 ]
 
 
