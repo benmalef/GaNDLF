@@ -103,6 +103,8 @@ class UserDefinedParameters(DefaultParameters):
             self.data_postprocessing_after_reverse_one_hot_encoding,
             self.data_postprocessing,
         )
-        #validate differential_privacy
-        self.differential_privacy = validate_differential_privacy(self.differential_privacy,self.batch_size)
+        # validate differential_privacy
+        self.differential_privacy = validate_differential_privacy(
+            self.differential_privacy, self.batch_size
+        )
         return self
