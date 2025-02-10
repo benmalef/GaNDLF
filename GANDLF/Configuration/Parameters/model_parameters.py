@@ -93,6 +93,4 @@ class Model(BaseModel):
             self.base_filters = 32
             print("Using default 'base_filters' in 'model': ", self.base_filters)
 
-
-
         return self
