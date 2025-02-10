@@ -21,6 +21,21 @@ ARCHITECTURE_OPTIONS = Literal[
     "densenet",
     "vgg16",
     "sdnet",
+    "densenet121",
+    "imagenet_vgg11",
+    "imagenet_vgg11_bn",
+    "imagenet_vgg13",
+    "imagenet_vgg13_bn",
+    "imagenet_vgg16",
+    "imagenet_vgg16_bn",
+    "imagenet_vgg19",
+    "imagenet_vgg19_bn",
+    "resnet18",
+    "densenet121",
+    "resnet18",
+    "resnet50",
+    "efficientnetb0",
+    "imagenet_unet",
 ]
 NORM_TYPE_OPTIONS = Literal["batch", "instance", "None"]
 
