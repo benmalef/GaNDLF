@@ -5,6 +5,7 @@ import yaml
 
 
 from GANDLF.Configuration.Parameters.parameters import Parameters
+from GANDLF.Configuration.Parameters.exclude_parameters import exclude_parameters
 
 
 def _parseConfig(
@@ -41,9 +42,16 @@ def ConfigManager(
         dict: The parameter dictionary.
     """
     try:
-        parameters = Parameters(
+        parameters_config = Parameters(
             **_parseConfig(config_file_path, version_check_flag)
-        ).model_dump(exclude_none=True)
+        )
+        parameters = parameters_config.model_dump(
+            exclude={
+                field
+                for field in exclude_parameters
+                if getattr(parameters_config, field) is None
+            }
+        )
         return parameters
     # except Exception as e:
     #     ## todo: ensure logging captures assertion errors
