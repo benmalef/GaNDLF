@@ -7,6 +7,7 @@ from GANDLF.Configuration.Parameters.validators import (
     validate_norm_type,
 )
 from GANDLF.models import global_models_dict
+
 # Define model architecture options
 ARCHITECTURE_OPTIONS = Literal[tuple(global_models_dict.keys())]
 NORM_TYPE_OPTIONS = Literal["batch", "instance", "None"]
