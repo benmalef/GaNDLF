@@ -155,9 +155,6 @@ def validate_norm_type(norm_type, architecture):
             raise ValueError(
                 "Normalization type cannot be 'None' for non-VGG architectures"
             )
-    else:
-        print("WARNING: Initializing 'norm_type' as 'batch'", flush=True)
-        norm_type = "batch"
     return norm_type
 
 
