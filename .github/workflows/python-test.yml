@@ -31,7 +31,7 @@ jobs:
       - name: Run classification unit tests
         if: ${{steps.dependencies.outputs.other_modified_files_count > 0}} # Run on any non-docs change
         run: |
-          pytest --cov=. --cov-report=xml --cov-append -k "classification and not histology"
+          pytest -s --cov=. --cov-report=xml --cov-append -k "classification and not histology"
       - name: Run segmentation unit tests
         if: ${{steps.dependencies.outputs.other_modified_files_count > 0}} # Run on any non-docs change
         run: |
