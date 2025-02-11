@@ -1,4 +1,5 @@
 # import logging
+import traceback
 from typing import Optional, Union
 from pydantic import ValidationError
 import yaml
@@ -53,14 +54,13 @@ def ConfigManager(
             }
         )
         return parameters
-    # except Exception as e:
-    #     ## todo: ensure logging captures assertion errors
-    #     assert (
-    #         False
-    #     ), f"Config parsing failed: {config_file_path=}, {version_check_flag=}, Exception: {str(e)}, {traceback.format_exc()}"
-    #     # logging.error(
-    #     #     f"gandlf config parsing failed: {config_file_path=}, {version_check_flag=}, Exception: {str(e)}, {traceback.format_exc()}"
-    #     # )
-    #     # raise
-    except ValidationError as exc:
-        print(exc.errors())
+    except Exception as e:
+        ## todo: ensure logging captures assertion errors
+        assert (
+            False
+        ), f"Config parsing failed: {config_file_path=}, {version_check_flag=}, Exception: {str(e)}, {traceback.format_exc()}"
+        # logging.error(
+        #     f"gandlf config parsing failed: {config_file_path=}, {version_check_flag=}, Exception: {str(e)}, {traceback.format_exc()}"
+        # )
+        # raise
+
