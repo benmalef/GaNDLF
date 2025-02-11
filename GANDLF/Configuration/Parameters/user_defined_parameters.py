@@ -5,7 +5,7 @@ from GANDLF.Configuration.Parameters.nested_training_parameters import NestedTra
 from GANDLF.Configuration.Parameters.patch_sampler import PatchSampler
 from GANDLF.utils import version_check
 from importlib.metadata import version
-from typing_extensions import Self, Literal, Annotated
+from typing_extensions import Self, Literal, Annotated, Any
 from GANDLF.Configuration.Parameters.validators import *
 from GANDLF.Configuration.Parameters.model_parameters import Model
 
@@ -64,7 +64,7 @@ class UserDefinedParameters(DefaultParameters):
     data_postprocessing_after_reverse_one_hot_encoding: dict = Field(
         description="data_postprocessing_after_reverse_one_hot_encoding.", default={}
     )
-    differential_privacy: dict = Field(
+    differential_privacy: Any = Field(
         description="Differential privacy.", default=None
     )
     # TODO: It should be defined with a better way (using a BaseModel class)
