@@ -4,7 +4,7 @@ import SimpleITK as sitk
 import numpy as np
 import pandas as pd
 import logging
-
+import json
 from pydicom.data import get_testdata_file
 import cv2
 
@@ -3361,6 +3361,8 @@ def test_differential_privacy_epsilon_classification_rad_2d(device):
     with open(file_config_temp, "w") as file:
         yaml.dump(parameters, file)
     parameters = parseConfig(file_config_temp, version_check_flag=True)
+
+    print(json.dumps(parameters))
 
     TrainingManager(
         dataframe=training_data,
