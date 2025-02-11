@@ -1120,7 +1120,7 @@ def test_train_normtype_segmentation_rad_3d(device):
     for norm_type in ["none", None]:
         parameters["model"]["norm_type"] = norm_type
         file_config_temp = write_temp_config_path(parameters)
-        with pytest.raises(ValidationError ) as exc_info:
+        with pytest.raises(ValidationError) as exc_info:
             parameters = ConfigManager(file_config_temp, version_check_flag=False)
 
         print("Exception raised:", exc_info.value)
