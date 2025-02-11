@@ -151,7 +151,7 @@ def validate_patch_size(patch_size, dimension) -> list:
 
 def validate_norm_type(norm_type, architecture):
     if norm_type is None or norm_type.lower() == "none":
-        if "vgg" in architecture:
+        if not ("vgg" in architecture):
             raise ValueError(
                 "Normalization type cannot be 'None' for non-VGG architectures"
             )
