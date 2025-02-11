@@ -8,6 +8,7 @@ TYPE_OPTIONS = Literal[
     "exp",
     "step",
     "reduce-on-plateau",
+    "reduce_on_plateau",
     "cosineannealing",
     "triangular",
     "triangular2",
