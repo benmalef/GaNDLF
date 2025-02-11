@@ -410,6 +410,8 @@ def validate_data_augmentation(value, patch_size) -> dict:
 
 
 def validate_differential_privacy(value, batch_size):
+    if isinstance(value, dict):
+        return value
     if value is None:
         return value
     if not isinstance(value, dict):
