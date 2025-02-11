@@ -41,7 +41,7 @@ class UserDefinedParameters(DefaultParameters):
         AfterValidator(validate_loss_function),
     ]
     metrics: Annotated[
-        Union[dict, list[Union[str, dict]]],
+        Union[dict, list[Union[str, dict, set]]],
         Field(description="Metrics."),
         AfterValidator(validate_metrics),
     ]
@@ -107,4 +107,5 @@ class UserDefinedParameters(DefaultParameters):
         self.differential_privacy = validate_differential_privacy(
             self.differential_privacy, self.batch_size
         )
+
         return self

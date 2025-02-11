@@ -1,5 +1,7 @@
 from pydantic import BaseModel, Field
-from typing import Optional, Dict
+from typing import Optional, Dict, Set
+
+from typing_extensions import Union
 
 
 class DefaultParameters(BaseModel):
@@ -50,7 +52,7 @@ class DefaultParameters(BaseModel):
     print_rgb_label_warning: bool = Field(
         default=True, description="Print a warning for RGB labels."
     )
-    data_postprocessing: Dict = Field(
+    data_postprocessing: Union[dict, set] = Field(
         default={}, description="Default data postprocessing configuration."
     )
     grid_aggregator_overlap: str = Field(

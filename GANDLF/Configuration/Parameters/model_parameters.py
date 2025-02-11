@@ -10,7 +10,7 @@ from GANDLF.models import global_models_dict
 
 # Define model architecture options
 ARCHITECTURE_OPTIONS = Literal[tuple(global_models_dict.keys())]
-NORM_TYPE_OPTIONS = Literal["batch", "instance", "None"]
+NORM_TYPE_OPTIONS = Literal["batch", "instance", "none"]
 
 
 # You can define new parameters for model here. Please read the pydantic documentation.
