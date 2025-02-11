@@ -6,37 +6,9 @@ from GANDLF.Configuration.Parameters.validators import (
     validate_class_list,
     validate_norm_type,
 )
-
+from GANDLF.models import global_models_dict
 # Define model architecture options
-ARCHITECTURE_OPTIONS = Literal[
-    "unet",
-    "resunet",
-    "deep_resunet",
-    "deep_unet",
-    "light_resunet",
-    "light_unet",
-    "fcn",
-    "uinc",
-    "vgg",
-    "densenet",
-    "vgg16",
-    "sdnet",
-    "densenet121",
-    "imagenet_vgg11",
-    "imagenet_vgg11_bn",
-    "imagenet_vgg13",
-    "imagenet_vgg13_bn",
-    "imagenet_vgg16",
-    "imagenet_vgg16_bn",
-    "imagenet_vgg19",
-    "imagenet_vgg19_bn",
-    "resnet18",
-    "densenet121",
-    "resnet18",
-    "resnet50",
-    "efficientnetb0",
-    "imagenet_unet",
-]
+ARCHITECTURE_OPTIONS = Literal[tuple(global_models_dict.keys())]
 NORM_TYPE_OPTIONS = Literal["batch", "instance", "None"]
 
 

@@ -1,20 +1,9 @@
 from pydantic import BaseModel, ConfigDict, Field
 from typing_extensions import Literal
 
+from GANDLF.schedulers import global_schedulers_dict
 
-TYPE_OPTIONS = Literal[
-    "triangle",
-    "triangle_modified",
-    "exp",
-    "step",
-    "reduce-on-plateau",
-    "reduce_on_plateau",
-    "cosineannealing",
-    "triangular",
-    "triangular2",
-    "exp_range",
-    "exponential",
-]
+TYPE_OPTIONS = Literal[tuple(global_schedulers_dict.keys())]
 
 
 # It allows extra parameters
