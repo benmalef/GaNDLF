@@ -20,18 +20,18 @@ jobs:
         id: dependencies
         uses: ./.github/workflows/dependencies
 
-#      - name: Run generic unit tests
-#        if: ${{steps.dependencies.outputs.other_modified_files_count > 0}} # Run on any non-docs change
-#        run: |
-#          pytest -s --cov=. --cov-report=xml -k "generic"
-#      - name: Run classification unit tests with histology
-#        if: ${{steps.dependencies.outputs.other_modified_files_count > 0}} # Run on any non-docs change
-#        run: |
-#          pytest --cov=. --cov-report=xml --cov-append -k "classification and histology"
-#      - name: Run classification unit tests
-#        if: ${{steps.dependencies.outputs.other_modified_files_count > 0}} # Run on any non-docs change
-#        run: |
-#          pytest -s --cov=. --cov-report=xml --cov-append -k "classification and not histology"
+      - name: Run generic unit tests
+        if: ${{steps.dependencies.outputs.other_modified_files_count > 0}} # Run on any non-docs change
+        run: |
+          pytest --cov=. --cov-report=xml -k "generic"
+      - name: Run classification unit tests with histology
+        if: ${{steps.dependencies.outputs.other_modified_files_count > 0}} # Run on any non-docs change
+        run: |
+          pytest --cov=. --cov-report=xml --cov-append -k "classification and histology"
+      - name: Run classification unit tests
+        if: ${{steps.dependencies.outputs.other_modified_files_count > 0}} # Run on any non-docs change
+        run: |
+          pytest --cov=. --cov-report=xml --cov-append -k "classification and not histology"
       - name: Run segmentation unit tests
         if: ${{steps.dependencies.outputs.other_modified_files_count > 0}} # Run on any non-docs change
         run: |
