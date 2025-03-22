@@ -1,15 +1,16 @@
 import ast
 import traceback
 from copy import deepcopy
+from sched import scheduler
 
-from GANDLF.configuration.differential_privacy_config import DifferentialPrivacyConfig
+from GANDLF.Configuration.differential_privacy_config import DifferentialPrivacyConfig
 from GANDLF.data.post_process import postprocessing_after_reverse_one_hot_encoding
 import numpy as np
 import sys
-from GANDLF.configuration.optimizer_config import OptimizerConfig
-from GANDLF.configuration.patch_sampler_config import PatchSamplerConfig
-from GANDLF.configuration.scheduler_config import SchedulerConfig
-from GANDLF.configuration.utils import initialize_key
+from GANDLF.Configuration.optimizer_config import OptimizerConfig
+from GANDLF.Configuration.patch_sampler_config import PatchSamplerConfig
+from GANDLF.Configuration.scheduler_config import SchedulerConfig, base_triangle_config
+from GANDLF.Configuration.utils import initialize_key, combine_models
 from GANDLF.metrics import surface_distance_ids
 
 
@@ -169,11 +170,14 @@ def validate_parallel_compute_command(value):
     return value
 
 
-def validate_schedular(value, learning_rate):
+def validate_scheduler(value, learning_rate):
     if isinstance(value, str):
         value = SchedulerConfig(type=value)
     if value.step_size is None:
         value.step_size = learning_rate / 5.0
+    schedulerConfigCombine = combine_models(SchedulerConfig,base_triangle_config)
+    combineScheduler = schedulerConfigCombine(**value.model_dump())
+    value = SchedulerConfig(**combineScheduler.model_dump())
     return value
 
 

@@ -1,9 +1,8 @@
 import logging
 from typing import Optional, Union
 
-
 from typing import Type
-from pydantic import BaseModel, ValidationError
+from pydantic import BaseModel, ValidationError, create_model
 from pydantic_core import ErrorDetails
 
 
@@ -107,3 +106,25 @@ def handle_configuration_errors(e: ValidationError):
     messages = extract_messages(convert_errors(e))
     for message in messages:
         logging.error(message)
+
+def combine_models(base_model: Type[BaseModel], extra_model: Type[BaseModel]):
+    """Combine base model with an extra model dynamically."""
+    fields = {}
+    # Collect base model fields
+    for field_name, field_info in base_model.model_fields.items():
+        fields[field_name] = (field_info.annotation, field_info.default if field_info.default is not Ellipsis else ...)
+
+    # Add fields from the extra model
+    for field_name, field_info in extra_model.model_fields.items():
+        fields[field_name] = (field_info.annotation, field_info.default if field_info.default is not Ellipsis else ...)
+
+    # Return the new dynamically combined model
+    return create_model(base_model.__name__, **fields)
+
+
+def add_config_at_the_end_of_values(schedulers_dict):
+    # Create a new dictionary with '_config' appended to each value
+    updated_dict = {key: value.__name__ + "_config" if callable(value) else str(value).replace('"', '').replace("'", '')
+                    for key, value in schedulers_dict.items()}
+
+    return updated_dict

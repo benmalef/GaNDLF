@@ -1,16 +1,16 @@
 from typing import Union
 from pydantic import BaseModel, model_validator, Field, AfterValidator
-from GANDLF.configuration.default_config import DefaultParameters
-from GANDLF.configuration.differential_privacy_config import DifferentialPrivacyConfig
-from GANDLF.configuration.nested_training_config import NestedTraining
-from GANDLF.configuration.optimizer_config import OptimizerConfig
-from GANDLF.configuration.patch_sampler_config import PatchSamplerConfig
-from GANDLF.configuration.scheduler_config import SchedulerConfig
+from GANDLF.Configuration.default_config import DefaultParameters
+from GANDLF.Configuration.differential_privacy_config import DifferentialPrivacyConfig
+from GANDLF.Configuration.nested_training_config import NestedTraining
+from GANDLF.Configuration.optimizer_config import OptimizerConfig
+from GANDLF.Configuration.patch_sampler_config import PatchSamplerConfig
+from GANDLF.Configuration.scheduler_config import SchedulerConfig
 from GANDLF.utils import version_check
 from importlib.metadata import version
 from typing_extensions import Self, Literal, Annotated
-from GANDLF.configuration.validators import (
-    validate_schedular,
+from GANDLF.Configuration.validators import (
+    validate_scheduler,
     validate_optimizer,
     validate_loss_function,
     validate_metrics,
@@ -22,7 +22,8 @@ from GANDLF.configuration.validators import (
     validate_data_postprocessing_after_reverse_one_hot_encoding,
     validate_differential_privacy,
 )
-from GANDLF.configuration.model_config import ModelConfig
+from GANDLF.Configuration.model_config import ModelConfig
+from GANDLF.Configuration.scheduler_config import base_triangle_config
 
 
 class Version(BaseModel):  # TODO: Maybe should be to another folder
@@ -65,8 +66,7 @@ class UserDefinedParameters(DefaultParameters):
         default="", description="Parallel compute command."
     )
     scheduler: Union[str, SchedulerConfig] = Field(
-        description="Scheduler.", default=SchedulerConfig(type="triangle_modified")
-    )
+        description="Scheduler.")
     optimizer: Union[str, OptimizerConfig] = Field(
         description="Optimizer.", default=OptimizerConfig(type="adam")
     )  # TODO: Check it again for (opt)
@@ -103,7 +103,7 @@ class UserDefinedParameters(DefaultParameters):
             self.parallel_compute_command
         )
         # validate scheduler
-        self.scheduler = validate_schedular(self.scheduler, self.learning_rate)
+        self.scheduler = validate_scheduler(self.scheduler, self.learning_rate)
         # validate optimizer
         self.optimizer = validate_optimizer(self.optimizer)
         # validate patch_sampler
