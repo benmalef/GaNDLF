@@ -9,12 +9,14 @@ TYPE_OPTIONS = Literal[tuple(global_schedulers_dict.keys())]
 class base_triangle_config(BaseModel):
     min_lr: float = Field(default=(10**-3))
     max_lr: float = Field(default=1)
+    step_size: float = Field(description="step_size", default=None)
 
 
 class triangle_modified_config(BaseModel):
     min_lr: float = Field(default=0.000001)
     max_lr: float = Field(default=0.001)
     max_lr_multiplier: float = Field(default=1.0)
+    step_size: float = Field(description="step_size", default=None)
 
 
 class cyclic_lr_base_config(BaseModel):
@@ -28,6 +30,7 @@ class cyclic_lr_base_config(BaseModel):
     cycle_momentum: bool = Field(default=False)
     base_momentum: float = Field(default=0.8)
     max_momentum: float = Field(default=0.9)
+    step_size: float = Field(description="step_size", default=None)
 
 
 class exp_config(BaseModel):
@@ -36,6 +39,7 @@ class exp_config(BaseModel):
 
 class step_config(BaseModel):
     gamma: float = Field(default=0.1)
+    step_size: float = Field(description="step_size", default=None)
 
 
 class cosineannealing_config(BaseModel):
@@ -65,11 +69,7 @@ class warmupcosineschedule_config(BaseModel):
 # It allows extra parameters
 class SchedulerConfig(BaseModel):
     model_config = ConfigDict(extra="allow")
-    type: TYPE_OPTIONS = Field(
-        description="triangle/triangle_modified use LambdaLR but triangular/triangular2/exp_range uses CyclicLR"
-    )
-
-    step_size: float = Field(description="step_size", default=None)
+    type: TYPE_OPTIONS = Field(description="scheduler type")
 
 
 # Define the type and the scheduler base model class

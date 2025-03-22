@@ -176,8 +176,6 @@ def validate_parallel_compute_command(value):
 def validate_schedular(value, learning_rate, num_epochs):
     if isinstance(value, str):
         value = SchedulerConfig(type=value)
-    if value.step_size is None:
-        value.step_size = learning_rate / 5.0
     # Find the scheduler_config class based on the type
     combine_scheduler_class = schedulers_dict_config[value.type]
     # Combine it with the SchedulerConfig class
@@ -192,6 +190,8 @@ def validate_schedular(value, learning_rate, num_epochs):
             value.max_lr = learning_rate
     if value.type in ["warmupcosineschedule", "wcs"]:
         value.warmup_steps = num_epochs * 0.1
+    if hasattr(value,"step_size") and value.step_size is None:
+        value.step_size = learning_rate / 5.0
 
     return value
 
