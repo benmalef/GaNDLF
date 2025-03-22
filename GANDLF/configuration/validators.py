@@ -190,7 +190,7 @@ def validate_schedular(value, learning_rate, num_epochs):
             value.max_lr = learning_rate
     if value.type in ["warmupcosineschedule", "wcs"]:
         value.warmup_steps = num_epochs * 0.1
-    if hasattr(value,"step_size") and value.step_size is None:
+    if hasattr(value, "step_size") and value.step_size is None:
         value.step_size = learning_rate / 5.0
 
     return value
