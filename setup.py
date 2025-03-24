@@ -49,7 +49,7 @@ requirements = [
     "pandas>=2.0.0",
     "scikit-learn>=0.23.2",
     "scikit-image>=0.19.1",
-    "setuptools==75.8.0",
+    "setuptools",
     "seaborn",
     "pyyaml==6.0.1",
     "matplotlib",
