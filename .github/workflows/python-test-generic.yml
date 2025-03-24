@@ -1,0 +1,28 @@
+name: CI-PyTest-generic-tests
+
+on:
+  push:
+    branches: [master]
+  pull_request: {}
+
+jobs:
+  CI-PyTest-generic-tests:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Call reusable workflow to install dependencies
+        id: dependencies
+        uses: ./.github/workflows/dependencies
+
+      - name: Run generic unit tests to download data and construct CSVs
+        if: ${{steps.dependencies.outputs.other_modified_files_count > 0}} # Run on any non-docs change
+        run: |
+          pytest --cov=. --cov-report=xml -k "prepare_data_for_ci"
+
+      - name: Run generic unit tests
+        if: ${{steps.dependencies.outputs.other_modified_files_count > 0}} # Run on any non-docs change
+        run: |
+          pytest --cov=. --cov-report=xml -k "generic"
