@@ -65,8 +65,8 @@ RUN uv pip install -e . --system
 # Entrypoint forces all commands given via "docker run" to go through python, CMD forces the default entrypoint script argument to be gandlf run
 # If a user calls "docker run gandlf:[tag] anonymize", it will resolve to running "gandlf anonymize" instead.
 # CMD is inherently overridden by args to "docker run", entrypoint is constant.
-ENTRYPOINT ["gandlf"]
-CMD ["run"]
+ENTRYPOINT gandlf
+CMD run
 
 # The below force the container commands to run as a nonroot user with UID > 10000.
 # This greatly reduces UID collision probability between container and host, helping prevent privilege escalation attacks.
